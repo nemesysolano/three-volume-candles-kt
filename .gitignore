@@ -2,7 +2,7 @@
 build/
 data/*.csv
 src/main/python/__pycache__/
-
+.idea/sonarlint/
 !gradle/wrapper/gradle-wrapper.jar
 !**/src/main/**/build/
 !**/src/test/**/build/

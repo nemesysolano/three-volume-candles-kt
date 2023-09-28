@@ -23,10 +23,6 @@ tasks.withType(JavaCompile) {
     options.encoding = 'UTF-8'
 }
 
-application {
-   mainClass = 'HelloApplication'
-}
-
 [compileKotlin, compileTestKotlin].forEach {
     it.kotlinOptions {
         jvmTarget = '17'
