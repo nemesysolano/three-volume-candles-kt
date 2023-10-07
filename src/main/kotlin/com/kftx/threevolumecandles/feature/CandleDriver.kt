@@ -11,7 +11,7 @@ object CandleDriver {
         val startInclusive = 2 * LOOKBACK_PERIOD - 1
         val endInclusive = array.size
         return IntStream.range(startInclusive, endInclusive)
-            /*.parallel()*/.mapToObj { index -> symmetricReversion(array[index], array) }.toList().toTypedArray()
+            .parallel().mapToObj { index -> symmetricReversion(array[index], array) }.toList().toTypedArray()
     }
 
     fun symmetricReversion(scaledCandle: ScaledCandle, array: Array<ScaledCandle>): ScaledCandle {

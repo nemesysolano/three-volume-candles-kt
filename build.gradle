@@ -51,3 +51,6 @@ tasks.withType(Test).configureEach {
     // Creates half as many forks as there are CPU cores.
     maxParallelForks = Runtime.runtime.availableProcessors().intdiv(2) ?: 1
 }
+
+apply plugin: 'application'
+mainClassName = "com.kftx.threevolumecandles.ApplicationKt"
