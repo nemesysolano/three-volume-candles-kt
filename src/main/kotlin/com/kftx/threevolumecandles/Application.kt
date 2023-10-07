@@ -3,7 +3,8 @@ package com.kftx.threevolumecandles
 import com.kftx.threevolumecandles.process.Process
 import java.io.File
 
-
+// gradle run --args="excel data/USDJPY-M30.csv data/USDJPY-M30-reversions.csv"
+// gradle run --args="plots data/USDJPY-M30-reversions.csv plots"
 fun main(args: Array<String>) {
     val command = args[0]
     val inputFileName = args[1]
