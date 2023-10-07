@@ -8,10 +8,11 @@ fun main(args: Array<String>) {
     val command = args[0]
     val inputFileName = args[1]
     val outFileName = args[2]
+    val outDirectory = args[2]
 
     when(command) {
-        "excel" -> Process.normalCandles( File(inputFileName),  File(outFileName))
-        "plots" -> Process.normalCandlePlots( File(inputFileName),  File(outFileName))
+        "excel" -> Process.writeCandles( File(inputFileName),  File(outFileName))
+        "plots" -> Process.writePlots( File(inputFileName),  File(outDirectory))
         else -> {}
     }
 

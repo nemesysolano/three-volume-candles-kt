@@ -2,7 +2,6 @@ package com.kftx.threevolumecandles.feature
 
 import com.kftx.threevolumecandles.LOOKBACK_PERIOD
 import com.kftx.threevolumecandles.model.Candle
-import com.kftx.threevolumecandles.model.CandlePlot
 import com.kftx.threevolumecandles.model.ScaledCandle
 import java.util.*
 import java.util.stream.IntStream
@@ -37,22 +36,4 @@ object CandleScaler {
         )
     }
 
-    fun plots(array: List<ScaledCandle>): List<CandlePlot> {
-        val startInclusive = com.kftx.threevolumecandles.LOOKBACK_PERIOD * 2 - 1
-        val endExclusive = array.size
-        val result = ArrayList<CandlePlot>(array.size)
-
-//        for(current in startInclusive..endInclusive step BOUNCE_SIZE) {
-//            val start = current - BOUNCE_SIZE + 1
-//            val slice = array.copyOfRange(start, current + 1)
-//            val last = slice.last()
-//            result.add(CandlePlot(last.source.localDateTime, slice, last.reversion))
-//
-//            if(current == 10) {
-//                break
-//            }
-//        }
-
-        return result
-    }
 }

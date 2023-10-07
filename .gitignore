@@ -1,6 +1,6 @@
 .gradle
 build/
-plots/*.png
+plots/
 src/main/python/__pycache__/
 .idea/sonarlint/
 !gradle/wrapper/gradle-wrapper.jar

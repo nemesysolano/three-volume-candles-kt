@@ -35,6 +35,8 @@ dependencies {
     testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine:${junitVersion}")
     implementation("io.github.microutils:kotlin-logging-jvm:2.0.11")
     implementation("ch.qos.logback:logback-classic:1.2.6")
+    implementation("commons-io:commons-io:2.14.0")
+
 }
 
 test {
