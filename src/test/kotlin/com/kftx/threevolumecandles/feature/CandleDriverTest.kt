@@ -240,31 +240,31 @@ class CandleDriverTest {
         fun symmetricReversionWithScaledCandleTestSource(): Stream<Arguments> = Stream.of(
             Arguments.of(
                 arrayOf(
-                    ScaledCandle(Candle(0, Date(), 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0)),
-                    ScaledCandle(Candle(1, Date(), 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0)),
-                    ScaledCandle(Candle(2, Date(), 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0)),
-                    ScaledCandle(Candle(3, Date(), 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0)),
-                    ScaledCandle(Candle(4, Date(), 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0)),//
-                    ScaledCandle(Candle(5, Date(), 1.0, 1.0, 2.0, 1.0, 1.0, 1.0, 1.0)),
-                    ScaledCandle(Candle(6, Date(), 1.0, 1.0, 1.0, 3.0, 1.0, 1.0, 1.0)),
-                    ScaledCandle(Candle(7, Date(), 1.0, 1.0, 2.0, 1.0, 1.0, 1.0, 1.0)),
+                    ScaledCandle(Candle(0, Date(), 5.0, 6.0, 5.0, 1.0, 1.0, 1.0, 1.0)),
+                    ScaledCandle(Candle(1, Date(), 4.0, 5.0, 4.0, 1.0, 1.0, 1.0, 1.0)),
+                    ScaledCandle(Candle(2, Date(), 3.0, 4.0, 3.0, 1.0, 1.0, 1.0, 1.0)),
+                    ScaledCandle(Candle(3, Date(), 2.0, 3.0, 2.0, 1.0, 1.0, 1.0, 1.0)),
+                    ScaledCandle(Candle(4, Date(), 1.0, 2.0, 0.5, 1.0, 1.0, 1.0, 1.0)),//
+                    ScaledCandle(Candle(5, Date(), 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0)),
+                    ScaledCandle(Candle(6, Date(), 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0)),
+                    ScaledCandle(Candle(7, Date(), 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0)),
                     ScaledCandle(Candle(8, Date(), 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0)),
-                    ScaledCandle(Candle(9, Date(), 1.0, 1.0, 2.0, 1.0, 1.0, 1.0, 1.0)),
+                    ScaledCandle(Candle(9, Date(), 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0)),
                 ),
                 1
             ),
             Arguments.of(
                 arrayOf(
-                    ScaledCandle(Candle(0, Date(), 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0)),
-                    ScaledCandle(Candle(1, Date(), 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0)),
-                    ScaledCandle(Candle(2, Date(), 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0)),
-                    ScaledCandle(Candle(3, Date(), 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0)),
-                    ScaledCandle(Candle(4, Date(), 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0)),//
-                    ScaledCandle(Candle(5, Date(), 1.0, 1.0, 2.0, 0.5, 1.0, 1.0, 1.0)),
-                    ScaledCandle(Candle(6, Date(), 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0)),
-                    ScaledCandle(Candle(7, Date(), 1.0, 1.0, 2.0, 1.0, 1.0, 1.0, 1.0)),
+                    ScaledCandle(Candle(0, Date(), 1.0, 2.0, 0.5, 1.0, 1.0, 1.0, 1.0)),
+                    ScaledCandle(Candle(1, Date(), 2.0, 3.0, 1.0, 1.0, 1.0, 1.0, 1.0)),
+                    ScaledCandle(Candle(2, Date(), 3.0, 4.0, 1.0, 1.0, 1.0, 1.0, 1.0)),
+                    ScaledCandle(Candle(3, Date(), 4.0, 5.0, 1.0, 1.0, 1.0, 1.0, 1.0)),
+                    ScaledCandle(Candle(4, Date(), 5.0, 6.0, 1.0, 1.0, 1.0, 1.0, 1.0)),//
+                    ScaledCandle(Candle(5, Date(), 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0)),
+                    ScaledCandle(Candle(6, Date(), 1.0, 0.5, 1.0, 1.0, 1.0, 1.0, 1.0)),
+                    ScaledCandle(Candle(7, Date(), 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0)),
                     ScaledCandle(Candle(8, Date(), 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0)),
-                    ScaledCandle(Candle(9, Date(), 1.0, 1.0, 2.0, 1.0, 1.0, 1.0, 1.0)),
+                    ScaledCandle(Candle(9, Date(), 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0)),
                 ),
                 -1
             )

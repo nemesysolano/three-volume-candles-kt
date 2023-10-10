@@ -39,9 +39,12 @@ object CSV {
             printer.println("datetime, open, high, low, close, tick_volume, normalized_open, normalized_high, normalized_low, normalized_close, normalized_tick_volume, direction")
             array.forEach { row ->
                 val forexInput = row.source
-
+                val localDateTime = CSV.dateTimeFormatter.format(forexInput.localDateTime)
+                if(localDateTime == "2018-01-02 07:30:00") {
+                    println()
+                }
                 printer.println(String.format("%s,%12.8f,%12.8f,%12.8f,%12.8f,%12.8f,%12.8f,%12.8f,%12.8f,%12.8f,%12.8f, %d",
-                    CSV.dateTimeFormatter.format(forexInput.localDateTime),
+                    localDateTime,
                     forexInput.open,
                     forexInput.high,
                     forexInput.low,

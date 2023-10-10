@@ -1,6 +1,8 @@
 .gradle
 build/
 plots/
+cache/
+savedmodels/
 src/main/python/__pycache__/
 .idea/sonarlint/
 !gradle/wrapper/gradle-wrapper.jar

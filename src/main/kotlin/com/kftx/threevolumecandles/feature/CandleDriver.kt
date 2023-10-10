@@ -1,35 +1,43 @@
 package com.kftx.threevolumecandles.feature
 
 import com.kftx.threevolumecandles.LOOKBACK_PERIOD
+import com.kftx.threevolumecandles.io.CSV
 import com.kftx.threevolumecandles.model.ScaledCandle
 import java.util.stream.IntStream
 import kotlin.streams.toList
 
 object CandleDriver {
 
-    fun symmetricReversion(array: Array<ScaledCandle>): Array<ScaledCandle> {
+    fun symmetricReversion(array: Array<ScaledCandle>): Array<ScaledCandle> { //
         val startInclusive = 2 * LOOKBACK_PERIOD - 1
+        val replica = array.copyOf()
         val endInclusive = array.size
-        return IntStream.range(startInclusive, endInclusive)
-            .parallel().mapToObj { index -> symmetricReversion(array[index], array) }.toList().toTypedArray()
+        IntStream.range(startInclusive, endInclusive)
+            .parallel().forEach { index -> symmetricReversion(replica[index], replica) }
+        return replica
     }
 
     fun symmetricReversion(scaledCandle: ScaledCandle, array: Array<ScaledCandle>): ScaledCandle {
         val startInclusive = scaledCandle.source.index - 2 * LOOKBACK_PERIOD + 1
         val middlePoint = startInclusive + LOOKBACK_PERIOD - 1
         val endInclusive = middlePoint + LOOKBACK_PERIOD
+        val leftEndInclusive = middlePoint - 1
+        val rightStartInclusive = middlePoint + 1
+        val leftLL = lowestLowIndex(array, startInclusive, leftEndInclusive).first
+        val leftHH = highestHighIndex(array, startInclusive, leftEndInclusive).first
+        val rightLL = lowestLowIndex(array, rightStartInclusive, endInclusive).first
+        val rightHH = highestHighIndex(array, rightStartInclusive, endInclusive).first
 
-        val rightLC = lowestCloseIndex(array, middlePoint + 1, endInclusive)
-        val rightHC = highestCloseIndex(array, middlePoint + 1, endInclusive)
-        val up =  rightHC.first  >  array[middlePoint].source.close
-        val down =  rightLC.first <  array[middlePoint].source.close
-        val result = if(up && !down) {
-            scaledCandle.copy(direction = 1)
-        } else if(!up && down) {
-            scaledCandle.copy(direction = -1)
-        } else scaledCandle
+        val up = leftHH > array[middlePoint].source.high && array[middlePoint].source.low < rightLL
+        val down = leftLL < array[middlePoint].source.low && array[middlePoint].source.high > rightHH
 
-        return result
+        if(up) {
+            array[middlePoint] = array[middlePoint].copy(direction = 1)
+        } else if(down) {
+            array[middlePoint] = array[middlePoint].copy(direction = -1)
+        }
+
+        return array[middlePoint]
     }
 
     fun highestHighIndex(array: Array<ScaledCandle>, startInclusive: Int, endInclusive: Int) =

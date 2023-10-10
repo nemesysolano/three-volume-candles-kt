@@ -36,7 +36,9 @@ dependencies {
     implementation("io.github.microutils:kotlin-logging-jvm:2.0.11")
     implementation("ch.qos.logback:logback-classic:1.2.6")
     implementation("commons-io:commons-io:2.14.0")
-
+    implementation("org.jetbrains.kotlinx:kotlin-deeplearning-tensorflow:0.6.0-alpha-1")
+    implementation("org.jetbrains.kotlinx:kotlin-deeplearning-onnx:0.6.0-alpha-1")
+    implementation("org.jetbrains.kotlinx:kotlin-deeplearning-visualization:0.6.0-alpha-1")
 }
 
 test {
