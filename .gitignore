@@ -4,6 +4,7 @@ plots/
 cache/
 savedmodels/
 src/main/python/__pycache__/
+rc/main/python/nets/__pycache__/
 .idea/sonarlint/
 !gradle/wrapper/gradle-wrapper.jar
 !**/src/main/**/build/
