@@ -2,6 +2,7 @@ package com.kftx.threevolumecandles.feature
 
 import com.kftx.threevolumecandles.LOOKBACK_PERIOD
 import com.kftx.threevolumecandles.model.Candle
+import com.kftx.threevolumecandles.model.Direction
 import com.kftx.threevolumecandles.model.ScaledCandle
 import java.util.*
 import java.util.stream.IntStream
@@ -32,7 +33,7 @@ object CandleScaler {
             fit(source.low),
             fit(source.close),
             source.tickVolume / volumeMax,
-        0
+            Direction.IDLE
         )
     }
 

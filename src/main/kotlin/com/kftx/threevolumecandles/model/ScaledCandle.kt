@@ -7,7 +7,7 @@ data class ScaledCandle(
     val low: Double = 0.0,
     val close: Double = 0.0,
     val tickVolume: Double = 0.0,
-    val direction: Int = 0
+    val direction: Direction = Direction.IDLE
 
 ) {
     companion object {

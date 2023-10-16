@@ -2,6 +2,7 @@ package com.kftx.threevolumecandles.feature
 
 import com.kftx.threevolumecandles.LOOKBACK_PERIOD
 import com.kftx.threevolumecandles.io.CSV
+import com.kftx.threevolumecandles.model.Direction
 import com.kftx.threevolumecandles.model.ScaledCandle
 import java.util.stream.IntStream
 import kotlin.streams.toList
@@ -32,9 +33,9 @@ object CandleDriver {
         val down = leftLL < array[middlePoint].source.low && array[middlePoint].source.high > rightHH
 
         if(up) {
-            array[middlePoint] = array[middlePoint].copy(direction = 1)
+            array[middlePoint] = array[middlePoint].copy(direction = Direction.UP)
         } else if(down) {
-            array[middlePoint] = array[middlePoint].copy(direction = -1)
+            array[middlePoint] = array[middlePoint].copy(direction = Direction.DOWN)
         }
 
         return array[middlePoint]

@@ -18,7 +18,7 @@ object PNG {
         val endInclusive = index
         val pngGenerationContext = bufferedImageList.take()
         val slice = array.slice(IntRange(startInclusive, endInclusive))
-        val filePrefix = directory.absolutePath + File.separator + input.name.substring(0, input.name.lastIndexOf('.'))
+        val filePrefix = directory.absolutePath + File.separator
         try {
             writePlot(pngGenerationContext, filePrefix, slice)
         }finally {
@@ -58,7 +58,7 @@ object PNG {
         ImageIO.write(
             pngGenerationContext.bufferedImage,
             "png",
-            File("${filePrefix}-${pngGenerationContext.dateFormatter.format(localDateTime)}.png")
+            File("${filePrefix}${pngGenerationContext.dateFormatter.format(localDateTime)}.png")
         )
         graphics.color = Color.WHITE
         graphics.fillRect(0, 0, witdh, height)
