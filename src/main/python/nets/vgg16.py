@@ -35,7 +35,7 @@ if __name__ == "__main__":
 
     earlyStopping = tf.keras.callbacks.EarlyStopping(monitor='val_accuracy', mode='max', patience=5,  restore_best_weights=True)
 
-    model.fit(train['plot'], train['direction'], epochs=1, validation_data=(test['plot'], test['direction']), batch_size=10, callbacks=[earlyStopping])
+    model.fit(train['plot'], train['direction'], epochs=1, validation_data=(test['plot'], test['direction']), batch_size=50, callbacks=[earlyStopping])
 
 
     # # Verifiying input
