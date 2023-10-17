@@ -1,0 +1,11 @@
+#!/opt/homebrew/bin/bash
+
+SCRIPT_DIR=$( cd -- "$( dirname -- "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )
+SYMBOLS="USDJPY GBPUSD EURUSD"
+
+for  SYMBOL in $SYMBOLS
+do
+    gradle run --args="excel data/${SYMBOL}-H4.csv data/${SYMBOL}-H4-reversions.csv"
+    gradle run --args="plots data/${SYMBOL}-H4-reversions.csv plots"
+    
+done    

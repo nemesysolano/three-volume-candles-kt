@@ -12,8 +12,8 @@
 11. [resnet](https://iq.opengenus.org/resnet/)
 12. [resnet50](https://srsapireddy.medium.com/resnet-50-introduction-b5435fdba66f)
 13. [resnet_rs](https://sh-tsang.medium.com/review-resnet-rs-re-scaling-resnet-88f73446462b)
-14. [vgg16](https://medium.com/@mygreatlearning/everything-you-need-to-know-about-vgg16-7315defb5918), 
+14. ! [vgg16](https://medium.com/@mygreatlearning/everything-you-need-to-know-about-vgg16-7315defb5918), 
 https://www.kaggle.com/code/viratkothari/monkey-species-image-classification-transfer-vgg16/notebook, 
 https://towardsdatascience.com/transfer-learning-with-vgg16-and-keras-50ea161580b4
-15. [vgg19](https://medium.com/@AnasBrital98/vgg-16-and-vgg-19-cnn-architectures-d876f639cab7)
+15. ! [vgg19](https://medium.com/@AnasBrital98/vgg-16-and-vgg-19-cnn-architectures-d876f639cab7)
 16. [xception](https://towardsdatascience.com/review-xception-with-depthwise-separable-convolution-better-than-inception-v3-image-dc967dd42568)

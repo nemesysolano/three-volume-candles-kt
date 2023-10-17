@@ -33,6 +33,11 @@ def load_reversions_with_images(symbol, timeframe):
     inference_data =  pd.read_csv(symbol_data_file, parse_dates=['datetime']).iloc[LOOKBACK_PERIOD:,:].parallel_apply(lambda row: add_plot(row, symbol_plots_dir), axis=1)
     return pd.DataFrame.from_records(inference_data.values, columns=('direction','plot')).dropna()
 
+def load_reversions_with_images_for_timeframe(timeframe):
+    symbols = ("USDJPY", "EURUSD", "GBPUSD")
+    datasets = [load_reversions_with_images(symbol, timeframe) for symbol in symbols]
+    return pd.concat(datasets).sample(frac = 1)
+
 def split_dataset(dataset):
     test_size = 0.8
     border = int(test_size * len(dataset))
