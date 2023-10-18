@@ -17,6 +17,7 @@ def save_model(timeframe, model, y_hat, y_test):
         model, model_file_path, overwrite=True
     )
 
+    assert len(y_hat) == len(y_test)
     np.savetxt(y_hat_file_path, y_hat, delimiter=',')
     np.savetxt(y_test_file_path, y_test, delimiter=',')
     

@@ -18,8 +18,7 @@ if __name__ == "__main__":
     timeframe = args.timeframe
     version = int(args.version)
 
-    train, test= datasets.split_dataset(datasets.load_reversions_with_images_for_timeframe( timeframe))
-    print(train['plot'].shape, test['plot'].shape, test['direction'].shape)
+    train, validate, test= datasets.split_dataset(datasets.load_reversions_with_images_for_timeframe( timeframe))
     
     if version == 1:        
         base_model = tf.keras.applications.mobilenet.MobileNet(weights="imagenet", include_top=False, input_shape=train['plot'][0].shape)
@@ -32,6 +31,7 @@ if __name__ == "__main__":
     dense_layer_1 = tf.keras.layers.Dense(512,activation='relu')
     dense_layer_2 = tf.keras.layers.Dense(256,activation='relu')
     dense_layer_3 = tf.keras.layers.Dense(128,activation='relu')
+    dense_layer_3 = tf.keras.layers.Dense(64,activation='relu')
     prediction_layer = tf.keras.layers.Dense(datasets.NUM_CLASSES, activation='softmax')
 
     model = tf.keras.models.Sequential([
@@ -53,6 +53,7 @@ if __name__ == "__main__":
 
     earlyStopping = tf.keras.callbacks.EarlyStopping(monitor='val_accuracy', mode='max', patience=5,  restore_best_weights=True)
 
-    model.fit(train['plot'], train['direction'], epochs=10, validation_data=(test['plot'], test['direction']), batch_size=50, callbacks=[earlyStopping])
+    model.fit(train['plot'], train['direction'], epochs=20, validation_data=(validate['plot'], validate['direction']), batch_size=50, callbacks=[earlyStopping])
     y_hat = model.predict(test['plot'])
-    modelIO.save_model(timeframe, model, np.round(y_hat).astype(np.int32), np.round(test['direction']).astype(np.int32))
+    y_test = test['direction']
+    modelIO.save_model(timeframe, model, np.round(y_hat).astype(np.int32), np.round(y_test).astype(np.int32))

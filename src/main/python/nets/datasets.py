@@ -31,18 +31,16 @@ def load_reversions_with_images(symbol, timeframe):
     symbol_plots_dir = os.path.join(directories.PLOTS_DIR, "%s-%s" %(symbol, timeframe))
     symbol_data_file = os.path.join(directories.DATA_DIR, symbol_file_name)
     inference_data =  pd.read_csv(symbol_data_file, parse_dates=['datetime']).iloc[LOOKBACK_PERIOD:,:].parallel_apply(lambda row: add_plot(row, symbol_plots_dir), axis=1)
-    return pd.DataFrame.from_records(inference_data.values, columns=('direction','plot')).dropna()
-
+    return pd.DataFrame.from_records(inference_data.values, columns=('direction','plot')).dropna().sample(frac = 1)
 def load_reversions_with_images_for_timeframe(timeframe):
-    symbols = ("USDJPY", "EURUSD", "GBPUSD")
+    symbols = ("AUDUSD", "EURUSD", "GBPUSD", "USDCAD", "USDJPY")
     datasets = [load_reversions_with_images(symbol, timeframe) for symbol in symbols]
-    return pd.concat(datasets).sample(frac = 1)
-
-def split_dataset(dataset):
-    test_size = 0.8
-    border = int(test_size * len(dataset))
-
-    train, test = (dataset.iloc[:border], dataset.iloc[border:])
+    return pd.concat(datasets)
+    
+def split_dataset(dataset):    
+    train, validate, test = train_validate_test_split(dataset)
+    assert len(train) > len(validate) and len(validate) > len(test)
+    assert len(train) + len(validate) + len(test) == len(dataset)
 
     return (
         {
@@ -50,7 +48,23 @@ def split_dataset(dataset):
             'direction': tf.keras.utils.to_categorical(train['direction'], NUM_CLASSES)
         },
         {
+            'plot': tf.convert_to_tensor(np.array(validate['plot'].tolist()), np.float32) ,
+            'direction': tf.keras.utils.to_categorical(validate['direction'], NUM_CLASSES)
+        },
+        {
             'plot': tf.convert_to_tensor(np.array(test['plot'].tolist()), np.float32) ,
             'direction': tf.keras.utils.to_categorical(test['direction'], NUM_CLASSES)
-        },
+        },        
     )
+
+def train_validate_test_split(df, train_percent=.75, validate_percent=.15, seed=None):
+    np.random.seed(seed)
+    perm = np.random.permutation(df.index)
+    m = len(df.index)
+    train_end = int(train_percent * m)
+    validate_end = int(validate_percent * m) + train_end
+    train = df.iloc[perm[:train_end]]
+    validate = df.iloc[perm[train_end:validate_end]]
+    test = df.iloc[perm[validate_end:]]
+    return train, validate, test
+
