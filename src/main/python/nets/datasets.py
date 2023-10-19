@@ -32,6 +32,7 @@ def load_reversions_with_images(symbol, timeframe):
     symbol_data_file = os.path.join(directories.DATA_DIR, symbol_file_name)
     inference_data =  pd.read_csv(symbol_data_file, parse_dates=['datetime']).iloc[LOOKBACK_PERIOD:,:].parallel_apply(lambda row: add_plot(row, symbol_plots_dir), axis=1)
     return pd.DataFrame.from_records(inference_data.values, columns=('direction','plot')).dropna().sample(frac = 1)
+
 def load_reversions_with_images_for_timeframe(timeframe):
     symbols = ("AUDUSD", "EURUSD", "GBPUSD", "USDCAD", "USDJPY")
     datasets = [load_reversions_with_images(symbol, timeframe) for symbol in symbols]
@@ -68,3 +69,7 @@ def train_validate_test_split(df, train_percent=.75, validate_percent=.15, seed=
     test = df.iloc[perm[validate_end:]]
     return train, validate, test
 
+
+def train_validate_test_split_2(df, train_percent=.75, validate_percent=.15, seed=None):    
+    np.random.seed(seed)
+    work_end = int(train_percent + train_percent)

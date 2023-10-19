@@ -17,7 +17,7 @@ if __name__ == "__main__":
     timeframe = args.timeframe
     version = int(args.version)
 
-    train, test= datasets.split_dataset(datasets.load_reversions_with_images_for_timeframe( timeframe))
+    train, validate, test= datasets.split_dataset(datasets.load_reversions_with_images_for_timeframe( timeframe))
     print(train['plot'].shape, test['plot'].shape, test['direction'].shape)
 
     if version == 16:
@@ -49,10 +49,13 @@ if __name__ == "__main__":
         loss='categorical_crossentropy',
         metrics=['accuracy'],
     )
-
     earlyStopping = tf.keras.callbacks.EarlyStopping(monitor='val_accuracy', mode='max', patience=5,  restore_best_weights=True)
 
-    model.fit(train['plot'], train['direction'], epochs=5, validation_data=(test['plot'], test['direction']), batch_size=50, callbacks=[earlyStopping], use_multiprocessing = True)
+    model.fit(train['plot'], train['direction'], epochs=10, validation_data=(validate['plot'], validate['direction']), batch_size=50, callbacks=[earlyStopping])
+    y_hat = model.predict(test['plot'])
+    y_test = test['direction']
+    modelIO.save_model(timeframe, model, np.round(y_hat).astype(np.int32), np.round(y_test).astype(np.int32))
+
     
     #Create confusion matrix
     # y_hat = model.predict(test['plot'], use_multiprocessing = True)
