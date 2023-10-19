@@ -1,0 +1,8 @@
+
+SCRIPT_DIR=$( cd -- "$( dirname -- "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )
+SYMBOLS="AUDUSD EURUSD GBPUSD USDCAD USDJPY USDCHF NZDUSD"
+TIME_FRAME="H8"
+for  SYMBOL in $SYMBOLS
+do
+    ./py collector.py $SYMBOL H8 2014-01-01
+done
