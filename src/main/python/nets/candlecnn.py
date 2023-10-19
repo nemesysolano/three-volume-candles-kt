@@ -18,7 +18,7 @@ if __name__ == "__main__":
     timeframe = args.timeframe
     version = int(args.version)
 
-    train, validate, test= datasets.split_dataset(datasets.load_reversions_with_images_for_timeframe( timeframe))
+    train, validate, test= datasets.create_tensors_dictionary(datasets.load_reversions_with_images_for_timeframe( timeframe))
     print(train['plot'].shape, test['plot'].shape, test['direction'].shape)
     
     input_shape = train['plot'][0].shape

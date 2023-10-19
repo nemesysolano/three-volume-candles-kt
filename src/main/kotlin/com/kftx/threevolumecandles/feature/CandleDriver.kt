@@ -29,9 +29,14 @@ object CandleDriver {
         val rightLL = lowestLowIndex(array, rightStartInclusive, endInclusive).first
         val rightHH = highestHighIndex(array, rightStartInclusive, endInclusive).first
 
-        val up = leftHH > array[middlePoint].source.high && array[middlePoint].source.low < rightLL
-        val down = leftLL < array[middlePoint].source.low && array[middlePoint].source.high > rightHH
-
+        val up = leftHH > array[middlePoint].source.high &&
+                array[middlePoint].source.low < rightLL &&
+                array[middlePoint].open < array[middlePoint].close &&
+                array[middlePoint].close < 0.8
+        val down = leftLL < array[middlePoint].source.low &&
+                array[middlePoint].source.high > rightHH
+            /* array[middlePoint].open > array[middlePoint].close
+             array[middlePoint].close > 0.2 */
         if(up) {
             array[middlePoint] = array[middlePoint].copy(direction = Direction.UP)
         } else if(down) {

@@ -18,29 +18,24 @@ if __name__ == "__main__":
     timeframe = args.timeframe
     version = int(args.version)
 
-    train, validate, test= datasets.split_dataset(datasets.load_reversions_with_images_for_timeframe( timeframe))
+    train, validate, test= datasets.load_reversions_with_images_for_timeframe( timeframe, preprocessor=tf.keras.applications.mobilenet.preprocess_input)
     
     if version == 1:        
-        base_model = tf.keras.applications.mobilenet.MobileNet(weights="imagenet", include_top=False, input_shape=train['plot'][0].shape)
+        base_model = tf.keras.applications.mobilenet.MobileNet(weights="imagenet", include_top=False, input_shape=train['plot'][0].shape, classes=datasets.NUM_CLASSES)
     elif version == 2:
-        base_model = tf.keras.applications.mobilenet_v2.MobileNetV2(weights="imagenet", include_top=False, input_shape=train['plot'][0].shape)
+        base_model = tf.keras.applications.mobilenet_v2.MobileNetV2(weights="imagenet", include_top=False, input_shape=train['plot'][0].shape, classes=datasets.NUM_CLASSES)
 
     base_model.trainable = False ## Not trainable weights
 
-    global_average_pooling_2D = tf.keras.layers.GlobalAveragePooling2D() 
-    dense_layer_1 = tf.keras.layers.Dense(512,activation='relu')
-    dense_layer_2 = tf.keras.layers.Dense(256,activation='relu')
-    dense_layer_3 = tf.keras.layers.Dense(128,activation='relu')
-    dense_layer_3 = tf.keras.layers.Dense(64,activation='relu')
-    prediction_layer = tf.keras.layers.Dense(datasets.NUM_CLASSES, activation='softmax')
 
     model = tf.keras.models.Sequential([
         base_model,
-        global_average_pooling_2D,
-        dense_layer_1,
-        dense_layer_2,
-        dense_layer_3,
-        prediction_layer
+        tf.keras.layers.GlobalAveragePooling2D(),
+        tf.keras.layers.Flatten(),
+        tf.keras.layers.Dense(512, activation='relu'),
+        tf.keras.layers.Dense(256, activation='relu'),
+        tf.keras.layers.Dense(64, activation='relu'),
+        tf.keras.layers.Dense(datasets.NUM_CLASSES, activation='softmax')
     ])
 
     model.summary()
@@ -51,9 +46,9 @@ if __name__ == "__main__":
         metrics=['accuracy'],
     )
 
-    earlyStopping = tf.keras.callbacks.EarlyStopping(monitor='val_accuracy', mode='max', patience=5,  restore_best_weights=True)
+    earlyStopping = tf.keras.callbacks.EarlyStopping(monitor='val_accuracy', mode='max', patience=7,  restore_best_weights=True)
 
-    model.fit(train['plot'], train['direction'], epochs=10, validation_data=(validate['plot'], validate['direction']), batch_size=50, callbacks=[earlyStopping])
+    model.fit(train['plot'], train['direction'], epochs=10, validation_data=(validate['plot'], validate['direction']), batch_size=25, callbacks=[earlyStopping])
     y_hat = model.predict(test['plot'])
     y_test = test['direction']
     modelIO.save_model(timeframe, model, test['plot'] , np.round(y_hat).astype(np.int32), np.round(y_test).astype(np.int32))
