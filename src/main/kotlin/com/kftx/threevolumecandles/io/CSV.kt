@@ -43,7 +43,7 @@ object CSV {
                 if(localDateTime == "2018-01-02 07:30:00") {
                     println()
                 }
-                printer.println(String.format("%s,%12.8f,%12.8f,%12.8f,%12.8f,%12.8f,%12.8f,%12.8f,%12.8f,%12.8f,%12.8f, %s",
+                printer.println(String.format("%s,%12.8f,%12.8f,%12.8f,%12.8f,%12.8f,%12.8f,%12.8f,%12.8f,%12.8f,%12.8f,%d",
                     localDateTime,
                     forexInput.open,
                     forexInput.high,
@@ -55,7 +55,7 @@ object CSV {
                     row.low,
                     row.close,
                     row.tickVolume,
-                    row.direction.label
+                    row.direction.value
                 ))
             }
             printer.flush()

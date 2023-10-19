@@ -3,13 +3,13 @@ build/
 plots/
 cache/
 savedmodels/
-src/main/python/__pycache__/
-rc/main/python/nets/__pycache__/
+src/main/python/__pycache__/*.pyc 
+src/main/python/nets/__pycache__/*.pyc
 .idea/sonarlint/
 !gradle/wrapper/gradle-wrapper.jar
 !**/src/main/**/build/
 !**/src/test/**/build/
-
+models/
 ### IntelliJ IDEA ###
 .idea/modules.xml
 .idea/jarRepositories.xml
