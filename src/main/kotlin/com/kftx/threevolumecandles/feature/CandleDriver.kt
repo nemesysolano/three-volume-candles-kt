@@ -1,7 +1,6 @@
 package com.kftx.threevolumecandles.feature
 
 import com.kftx.threevolumecandles.LOOKBACK_PERIOD
-import com.kftx.threevolumecandles.io.CSV
 import com.kftx.threevolumecandles.model.Direction
 import com.kftx.threevolumecandles.model.ScaledCandle
 import java.util.stream.IntStream
@@ -32,10 +31,11 @@ object CandleDriver {
         val up = leftHH > array[middlePoint].source.high &&
                 array[middlePoint].source.low < rightLL &&
                 array[middlePoint].open < array[middlePoint].close &&
-                array[middlePoint].close < 0.8
+                array[middlePoint].close < 0.5
         val down = leftLL < array[middlePoint].source.low &&
                 array[middlePoint].source.high > rightHH
-            /* array[middlePoint].open > array[middlePoint].close
+        /*
+             array[middlePoint].open > array[middlePoint].close
              array[middlePoint].close > 0.2 */
         if(up) {
             array[middlePoint] = array[middlePoint].copy(direction = Direction.UP)
