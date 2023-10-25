@@ -20,26 +20,37 @@ object CandleDriver {
     fun symmetricReversion(scaledCandle: ScaledCandle, array: Array<ScaledCandle>): ScaledCandle {
         val startInclusive = scaledCandle.source.index - 2 * LOOKBACK_PERIOD + 1
         val middlePoint = startInclusive + LOOKBACK_PERIOD - 1
-        val endInclusive = middlePoint + LOOKBACK_PERIOD
+        val rightEndInclusive = middlePoint + LOOKBACK_PERIOD
         val leftEndInclusive = middlePoint - 1
         val rightStartInclusive = middlePoint + 1
         val leftLL = lowestLowIndex(array, startInclusive, leftEndInclusive).first
         val leftHH = highestHighIndex(array, startInclusive, leftEndInclusive).first
-        val rightLL = lowestLowIndex(array, rightStartInclusive, endInclusive).first
-        val rightHH = highestHighIndex(array, rightStartInclusive, endInclusive).first
+        val rightLL = lowestLowIndex(array, rightStartInclusive, rightEndInclusive).first
+        val rightHH = highestHighIndex(array, rightStartInclusive, rightEndInclusive).first
 
         val up = leftHH > array[middlePoint].source.high &&
                 array[middlePoint].source.low < rightLL &&
                 array[middlePoint].open < array[middlePoint].close &&
                 array[middlePoint].close < 0.5
         val down = leftLL < array[middlePoint].source.low &&
-                array[middlePoint].source.high > rightHH
+                (
+                    array[middlePoint].source.close > rightHH ||
+                    array[middlePoint].source.close > array[rightEndInclusive].source.close ||
+                    IntStream.rangeClosed(middlePoint+1, rightEndInclusive)
+                        .mapToObj { index-> array[index] }
+                        .filter { item ->
+                            array[middlePoint].source.close > item.source.close &&
+                            array[middlePoint].source.close >  item.source.open &&
+                            item.source.open > item.source.close
+                        }
+                        .count() > 0
+                )
         /*
              array[middlePoint].open > array[middlePoint].close
              array[middlePoint].close > 0.2 */
-        if(up) {
+        if(up && !down) {
             array[middlePoint] = array[middlePoint].copy(direction = Direction.UP)
-        } else if(down) {
+        } else if(!up && down) {
             array[middlePoint] = array[middlePoint].copy(direction = Direction.DOWN)
         }
 

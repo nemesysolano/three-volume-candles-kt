@@ -5,12 +5,13 @@ import numpy as np
 import argparse
 import datetime
 import modelIO
+import os
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
     print(directories.DATA_DIR)
     print(directories.PLOTS_DIR)
-    # display data on the MetaTrader 5 package    
+    # display data on the MetaTrader 5 package  
     parser = argparse.ArgumentParser()
     parser.add_argument('timeframe')
     parser.add_argument('version')
@@ -31,7 +32,7 @@ if __name__ == "__main__":
     model = tf.keras.models.Sequential([
         base_model,
         tf.keras.layers.GlobalAveragePooling2D(),
-        tf.keras.layers.Flatten(),
+        # tf.keras.layers.Flatten(),
         tf.keras.layers.Dense(512, activation='relu'),
         tf.keras.layers.Dense(256, activation='relu'),
         tf.keras.layers.Dense(64, activation='relu'),
@@ -46,9 +47,19 @@ if __name__ == "__main__":
         metrics=['accuracy'],
     )
 
-    earlyStopping = tf.keras.callbacks.EarlyStopping(monitor='val_accuracy', mode='max', patience=7,  restore_best_weights=True)
+    model_file = os.path.join(directories.MODELS_DIR,timeframe,"checkpoint.dat")
+    directories.remove_dir(model_file)
+    earlyStopping = tf.keras.callbacks.EarlyStopping(monitor='val_accuracy', patience = 5, restore_best_weights = False)
+    checkpoint = tf.keras.callbacks.ModelCheckpoint(
+    filepath=model_file,
+        save_weights_only=True,
+        monitor='val_accuracy',
+        mode='max',
+        save_best_only=True, verbose=1
+    )
 
-    model.fit(train['plot'], train['direction'], epochs=10, validation_data=(validate['plot'], validate['direction']), batch_size=50, callbacks=[earlyStopping])
+    model.fit(train['plot'], train['direction'], epochs=10, validation_data=(validate['plot'], validate['direction']), batch_size=50, callbacks=[earlyStopping, checkpoint])
+    model.load_weights(model_file)
     y_hat = model.predict(test['plot'])
     y_test = test['direction']
     modelIO.save_model(timeframe, model, test['plot'] , np.round(y_hat).astype(np.int32), np.round(y_test).astype(np.int32))

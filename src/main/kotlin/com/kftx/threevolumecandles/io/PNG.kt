@@ -39,12 +39,14 @@ object PNG {
             val color = ColorPicker.forNormalCandle(candle)
             graphics.color = color
 
+
             graphics.drawLine(
                 horizOffset + 6,
                 height - (candle.high*100).toInt(),
                 horizOffset + 6,
-                height - (candle.low*100).toInt(),
+                ((height - candle.low)*100).toInt(),
             )
+   
             graphics.fillRect(
                 horizOffset,
                 height - (candle.open.coerceAtMost(candle.close) * height).toInt(),
