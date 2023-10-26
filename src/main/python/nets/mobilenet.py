@@ -60,6 +60,7 @@ if __name__ == "__main__":
 
     model.fit(train['plot'], train['direction'], epochs=10, validation_data=(validate['plot'], validate['direction']), batch_size=50, callbacks=[earlyStopping, checkpoint])
     model.load_weights(model_file)
+    directories.remove_dir(model_file)
     y_hat = model.predict(test['plot'])
     y_test = test['direction']
     modelIO.save_model(timeframe, model, test['plot'] , np.round(y_hat).astype(np.int32), np.round(y_test).astype(np.int32))
