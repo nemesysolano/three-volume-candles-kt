@@ -11,8 +11,10 @@ if __name__ == "__main__":
     parser = argparse.ArgumentParser()
     parser.add_argument('timeframe')
     args = parser.parse_args()
-    timeframe = args.timeframe
-    model, x, y_hat, y_test, probabilities = modelIO.load_model(timeframe)    
+    timeframe = args.timeframe    
+    model, probabilities = modelIO.load_model(timeframe)    
+    model.summary()
+    print(probabilities)
     
 
     

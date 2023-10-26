@@ -63,4 +63,4 @@ if __name__ == "__main__":
     directories.remove_dir(model_file)
     y_hat = model.predict(test['plot'])
     y_test = test['direction']
-    modelIO.save_model(timeframe, model, test['plot'] , np.round(y_hat).astype(np.int32), np.round(y_test).astype(np.int32))
+    modelIO.save_model(timeframe, model, np.round(y_hat).astype(np.int32), np.round(y_test).astype(np.int32))
