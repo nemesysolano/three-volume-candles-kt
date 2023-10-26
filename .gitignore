@@ -9,7 +9,6 @@ src/main/python/nets/__pycache__/*.pyc
 !gradle/wrapper/gradle-wrapper.jar
 !**/src/main/**/build/
 !**/src/test/**/build/
-models/
 ### IntelliJ IDEA ###
 .idea/modules.xml
 .idea/jarRepositories.xml
