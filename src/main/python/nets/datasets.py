@@ -9,6 +9,7 @@ import numpy as np
 
 LOOKBACK_PERIOD = 5
 NUM_CLASSES = 3
+symbols = ("AUDUSD", "EURUSD", "GBPUSD", "USDCAD", "USDJPY")
 
 pandarallel.initialize(progress_bar=True)
 
@@ -35,8 +36,11 @@ def load_reversions_with_images(symbol, timeframe, train_validate_percent = 0.90
         len(inference_data)
     )
 
-def load_reversions_with_images_for_timeframe(timeframe, train_validate_percent = 0.9, preprocessor = ident_preprocessor):
-    symbols = ("AUDUSD", "EURUSD", "GBPUSD", "USDCAD", "USDJPY")
+def load_reversions_with_images_for_backtesting(symbol, timeframe, train_validate_percent = 0.90, preprocessor = ident_preprocessor):
+    train_validate_dataset, test_dataset, inference_data_len = load_reversions_with_images(symbol, timeframe, train_validate_percent = 0.90, preprocessor = ident_preprocessor)    
+    return test_dataset
+
+def load_reversions_with_images_for_timeframe(timeframe, train_validate_percent = 0.9, preprocessor = ident_preprocessor):    
     train_validate_datasets = list()
     test_datasets = list()
     inference_data_len_total = 0
