@@ -1,12 +1,12 @@
 from sklearn.metrics import confusion_matrix
 import numpy as np
 import os
-import directories
+from environment import models_directory
 import tensorflow as tf
 import json
 
 def save_model(timeframe, model, y_hat, y_test):
-    model_directory_path = os.path.join(directories.MODELS_DIR, timeframe)
+    model_directory_path = models_directory(timeframe)
     model_file_path = os.path.join(model_directory_path, "model.json")
     weights_file_path = os.path.join(model_directory_path, "weights.h5")
     probabilities_file_path = os.path.join(model_directory_path, "probabilities.csv")

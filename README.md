@@ -20,3 +20,5 @@ https://towardsdatascience.com/transfer-learning-with-vgg16-and-keras-50ea161580
 
 ## Quick BackTesting ##
 https://github.com/mkhushi/MQL5-Python-Backtesting/blob/main/main_DecisionMaker.py
+
+0.77896

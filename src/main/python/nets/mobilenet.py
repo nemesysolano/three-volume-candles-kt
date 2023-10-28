@@ -1,16 +1,13 @@
 import datasets
-import directories
 import tensorflow as tf
 import numpy as np
 import argparse
-import datetime
+from environment import remove_dir, MODELS_DIR, checkpoint_file
 import modelIO
 import os
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
-    print(directories.DATA_DIR)
-    print(directories.PLOTS_DIR)
     # display data on the MetaTrader 5 package  
     parser = argparse.ArgumentParser()
     parser.add_argument('timeframe')
@@ -32,10 +29,6 @@ if __name__ == "__main__":
     model = tf.keras.models.Sequential([
         base_model,
         tf.keras.layers.GlobalAveragePooling2D(),
-        # tf.keras.layers.Flatten(),
-        tf.keras.layers.Dense(512, activation='relu'),
-        tf.keras.layers.Dense(256, activation='relu'),
-        tf.keras.layers.Dense(64, activation='relu'),
         tf.keras.layers.Dense(datasets.NUM_CLASSES, activation='softmax')
     ])
 
@@ -47,20 +40,20 @@ if __name__ == "__main__":
         metrics=['accuracy'],
     )
 
-    model_file = os.path.join(directories.MODELS_DIR,timeframe,"checkpoint.dat")
-    directories.remove_dir(model_file)
+    checkpoint_file_path = checkpoint_file(timeframe)
+    remove_dir(checkpoint_file_path)
     earlyStopping = tf.keras.callbacks.EarlyStopping(monitor='val_accuracy', patience = 5, restore_best_weights = False)
     checkpoint = tf.keras.callbacks.ModelCheckpoint(
-    filepath=model_file,
+        filepath=checkpoint_file_path,
         save_weights_only=True,
         monitor='val_accuracy',
         mode='max',
         save_best_only=True, verbose=1
     )
 
-    model.fit(train['plot'], train['direction'], epochs=10, validation_data=(validate['plot'], validate['direction']), batch_size=50, callbacks=[earlyStopping, checkpoint])
-    model.load_weights(model_file)
-    directories.remove_dir(model_file)
+    model.fit(train['plot'], train['direction'], epochs=10, validation_data=(validate['plot'], validate['direction']), batch_size=100, callbacks=[earlyStopping, checkpoint])
+    model.load_weights(checkpoint_file_path)
+
     y_hat = model.predict(test['plot'])
     y_test = test['direction']
     modelIO.save_model(timeframe, model, np.round(y_hat).astype(np.int32), np.round(y_test).astype(np.int32))

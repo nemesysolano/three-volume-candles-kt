@@ -4,7 +4,7 @@ SYMBOLS="AUDUSD EURUSD GBPUSD USDCAD USDJPY USDCHF NZDUSD"
 TIME_FRAME="H8"
 for  SYMBOL in $SYMBOLS
 do
-    gradle run --args="excel data/${SYMBOL}-${TIME_FRAME}.csv data/${SYMBOL}-${TIME_FRAME}-reversions.csv"
-    gradle run --args="plots data/${SYMBOL}-${TIME_FRAME}-reversions.csv plots"
+    ./gradlew run --args="excel data/${SYMBOL}-${TIME_FRAME}.csv data/${SYMBOL}-${TIME_FRAME}-reversions.csv"
+    ./gradlew run --args="plots data/${SYMBOL}-${TIME_FRAME}-reversions.csv plots"
     
 done    

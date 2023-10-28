@@ -1,4 +1,4 @@
-import directories
+from environment import PLOTS_DIR, DATA_DIR
 import pandas as pd
 import os
 from multiprocessing import pool, cpu_count
@@ -10,6 +10,7 @@ import numpy as np
 LOOKBACK_PERIOD = 5
 NUM_CLASSES = 3
 symbols = ("AUDUSD", "EURUSD", "GBPUSD", "USDCAD", "USDJPY")
+columns = ('direction','plot')
 
 pandarallel.initialize(progress_bar=True)
 
@@ -23,13 +24,14 @@ def add_plot(row, symbol_plots_dir, preprocessor = ident_preprocessor):
 
 def load_reversions_with_images(symbol, timeframe, train_validate_percent = 0.90, preprocessor = ident_preprocessor):
     symbol_file_name = "%s-%s-reversions.csv"%(symbol, timeframe)
-    symbol_plots_dir = os.path.join(directories.PLOTS_DIR, "%s-%s" %(symbol, timeframe))
-    symbol_data_file = os.path.join(directories.DATA_DIR, symbol_file_name)
-    inference_data = pd.read_csv(symbol_data_file, parse_dates=['datetime'])
-    inference_data = inference_data.head(len(inference_data)-(LOOKBACK_PERIOD-1)).parallel_apply(lambda row: add_plot(row, symbol_plots_dir, preprocessor), axis=1)
+    symbol_plots_dir = os.path.join(PLOTS_DIR, "%s-%s" %(symbol, timeframe))
+    symbol_data_file = os.path.join(DATA_DIR, symbol_file_name)
+    dataset = pd.read_csv(symbol_data_file, parse_dates=['datetime'])
+    dataset = dataset.head(len(dataset)-(LOOKBACK_PERIOD-1))
+    inference_data = dataset.parallel_apply(lambda row: add_plot(row, symbol_plots_dir, preprocessor), axis=1)
     values =  inference_data.values
     train_validate_end = int(train_validate_percent * len(inference_data))
-    
+
     return (
         values[:train_validate_end],
         values[train_validate_end:],
@@ -37,14 +39,23 @@ def load_reversions_with_images(symbol, timeframe, train_validate_percent = 0.90
     )
 
 def load_reversions_with_images_for_backtesting(symbol, timeframe, train_validate_percent = 0.90, preprocessor = ident_preprocessor):
-    train_validate_dataset, test_dataset, inference_data_len = load_reversions_with_images(symbol, timeframe, train_validate_percent = 0.90, preprocessor = ident_preprocessor)    
-    return test_dataset
+    symbol_file_name = "%s-%s-reversions.csv"%(symbol, timeframe)
+    symbol_plots_dir = os.path.join(PLOTS_DIR, "%s-%s" %(symbol, timeframe))
+    symbol_data_file = os.path.join(DATA_DIR, symbol_file_name)
+    dataset = pd.read_csv(symbol_data_file, parse_dates=['datetime'])
+    dataset = dataset.head(len(dataset)-(LOOKBACK_PERIOD-1))
+    inference_data = dataset.parallel_apply(lambda row: add_plot(row, symbol_plots_dir, preprocessor), axis=1)
+    values =  inference_data.values
+    train_validate_end = int(train_validate_percent * len(inference_data))
+  
+    price_data = (dataset.iloc[train_validate_end:]).copy()
+    indicator =  pd.DataFrame((values[train_validate_end:]).tolist(), columns= columns)
+    return price_data, indicator
 
 def load_reversions_with_images_for_timeframe(timeframe, train_validate_percent = 0.9, preprocessor = ident_preprocessor):    
     train_validate_datasets = list()
     test_datasets = list()
     inference_data_len_total = 0
-    columns = ('direction','plot')
 
     for symbol in symbols:
         train_validate_dataset, test_dataset, inference_data_len = load_reversions_with_images(symbol, timeframe, train_validate_percent, preprocessor= preprocessor)
