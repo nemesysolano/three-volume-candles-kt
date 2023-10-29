@@ -52,7 +52,6 @@ if __name__ == "__main__":
     )
 
     model.fit(train['plot'], train['direction'], epochs=1, validation_data=(validate['plot'], validate['direction']), batch_size=100, callbacks=[earlyStopping, checkpoint])
-    model.load_weights(checkpoint_file_path)
 
     x = test['plot']
     y_test = np.round(test['direction']).astype(np.int32)

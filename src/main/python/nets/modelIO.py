@@ -1,25 +1,22 @@
 from sklearn.metrics import confusion_matrix
 import numpy as np
 import os
-from environment import models_directory
+from environment import models_directory, checkpoint_file
 import tensorflow as tf
 import json
 
 def save_model(timeframe, model, x, y_test):
     model_directory_path = models_directory(timeframe)
-    model_file_path = os.path.join(model_directory_path, "model.json")
-    weights_file_path = os.path.join(model_directory_path, "weights.h5")
+    model_file_path = os.path.join(model_directory_path, "model.h5")
     probabilities_file_path = os.path.join(model_directory_path, "probabilities.csv")
+    checkpoint_file_path = checkpoint_file(timeframe)
+
     y_hat = np.round(model.predict(x)).astype(np.int32)
 
     if not os.path.exists(model_directory_path):
         os.makedirs(model_directory_path)
-
-    assert len(y_hat) == len(y_test)
-
-    with open(model_file_path,'w') as json_file:
-        json_file.write(model.to_json())        
-    model.save_weights(weights_file_path,save_format='h5') # h5 format
+   
+    model.save(model_file_path, save_format='h5') # h5 format
     
     y_true = np.argmax(y_test.astype(np.int32), axis=1)-1
     y_pred = np.argmax(y_hat.astype(np.int32), axis=1)-1
@@ -35,22 +32,10 @@ def save_model(timeframe, model, x, y_test):
 
 
 def load_model(timeframe):
-    model_directory_path = os.path.join(directories.MODELS_DIR, timeframe)
-    model_file_path = os.path.join(model_directory_path, "model.json")
-    weights_file_path = os.path.join(model_directory_path, "weights.h5")
+    model_directory_path = models_directory(timeframe)
+    model_file_path = os.path.join(model_directory_path, "model.h5")
     probabilities_file_path = os.path.join(model_directory_path, "probabilities.csv")
-
-    with open(model_file_path,'r') as json_file:
-        model = tf.keras.models.model_from_json(json_file.read())
-
-    model.load_weights(weights_file_path) # h5 format
-    model.compile(
-        optimizer='adam',
-        loss='categorical_crossentropy',
-        metrics=['accuracy'],
-    )    
-    
-
+    model = tf.keras.models.load_model(model_file_path)
     position_probabilities = np.loadtxt(probabilities_file_path, delimiter=',')
 
     return model, position_probabilities
