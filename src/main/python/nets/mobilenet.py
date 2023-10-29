@@ -51,9 +51,9 @@ if __name__ == "__main__":
         save_best_only=True, verbose=1
     )
 
-    model.fit(train['plot'], train['direction'], epochs=10, validation_data=(validate['plot'], validate['direction']), batch_size=100, callbacks=[earlyStopping, checkpoint])
+    model.fit(train['plot'], train['direction'], epochs=1, validation_data=(validate['plot'], validate['direction']), batch_size=100, callbacks=[earlyStopping, checkpoint])
     model.load_weights(checkpoint_file_path)
 
-    y_hat = model.predict(test['plot'])
-    y_test = test['direction']
-    modelIO.save_model(timeframe, model, np.round(y_hat).astype(np.int32), np.round(y_test).astype(np.int32))
+    x = test['plot']
+    y_test = np.round(test['direction']).astype(np.int32)
+    modelIO.save_model(timeframe, model, x,  y_test)

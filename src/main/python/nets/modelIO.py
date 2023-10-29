@@ -5,11 +5,12 @@ from environment import models_directory
 import tensorflow as tf
 import json
 
-def save_model(timeframe, model, y_hat, y_test):
+def save_model(timeframe, model, x, y_test):
     model_directory_path = models_directory(timeframe)
     model_file_path = os.path.join(model_directory_path, "model.json")
     weights_file_path = os.path.join(model_directory_path, "weights.h5")
     probabilities_file_path = os.path.join(model_directory_path, "probabilities.csv")
+    y_hat = np.round(model.predict(x)).astype(np.int32)
 
     if not os.path.exists(model_directory_path):
         os.makedirs(model_directory_path)
