@@ -1,3 +1,4 @@
+from sklearn.metrics import confusion_matrix
 import datasets
 import tensorflow as tf
 import numpy as np
@@ -51,8 +52,14 @@ if __name__ == "__main__":
         save_best_only=True, verbose=1
     )
 
-    model.fit(train['plot'], train['direction'], epochs=1, validation_data=(validate['plot'], validate['direction']), batch_size=100, callbacks=[earlyStopping, checkpoint])
+
+    model.fit(train['plot'], train['direction'], epochs=20, validation_data=(validate['plot'], validate['direction']), batch_size=100, callbacks=[earlyStopping, checkpoint])
 
     x = test['plot']
     y_test = np.round(test['direction']).astype(np.int32)
+    loss, accuracy = model.evaluate(x, y_test, verbose = 0)
+    print('Test loss:', loss) 
+    print('Test accuracy:', accuracy)
+
     modelIO.save_model(timeframe, model, x,  y_test)
+ 
