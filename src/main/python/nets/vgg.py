@@ -1,15 +1,15 @@
+from sklearn.metrics import confusion_matrix
 import datasets
-import environment as directories
 import tensorflow as tf
 import numpy as np
 import argparse
+from environment import remove_dir, MODELS_DIR, checkpoint_file
 import modelIO
+import os
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
-    print(directories.DATA_DIR)
-    print(directories.PLOTS_DIR)
-    # display data on the MetaTrader 5 package    
+    # display data on the MetaTrader 5 package  
     parser = argparse.ArgumentParser()
     parser.add_argument('timeframe')
     parser.add_argument('version')
@@ -17,8 +17,7 @@ if __name__ == "__main__":
     timeframe = args.timeframe
     version = int(args.version)
 
-    train, validate, test= datasets.create_tensors_dictionary(datasets.load_reversions_with_images_for_timeframe( timeframe))
-    print(train['plot'].shape, test['plot'].shape, test['direction'].shape)
+    train, validate, test= datasets.load_reversions_with_images_for_timeframe( timeframe, preprocessor=tf.keras.applications.mobilenet.preprocess_input)
 
     if version == 16:
         base_model = tf.keras.applications.vgg16.VGG16(weights="imagenet", include_top=False, input_shape=train['plot'][0].shape)
@@ -27,19 +26,10 @@ if __name__ == "__main__":
 
     base_model.trainable = False ## Not trainable weights
 
-    global_average_pooling_2D = tf.keras.layers.Flatten() 
-    dense_layer_1 = tf.keras.layers.Dense(512,activation='relu')
-    dense_layer_2 = tf.keras.layers.Dense(256,activation='relu')
-    dense_layer_3 = tf.keras.layers.Dense(128,activation='relu')
-    prediction_layer = tf.keras.layers.Dense(datasets.NUM_CLASSES, activation='softmax')
-
     model = tf.keras.models.Sequential([
         base_model,
-        global_average_pooling_2D,
-        dense_layer_1,
-        dense_layer_2,
-        dense_layer_3,
-        prediction_layer
+        tf.keras.layers.GlobalAveragePooling2D(),
+        tf.keras.layers.Dense(datasets.NUM_CLASSES, activation='softmax')
     ])
 
     model.summary()
@@ -49,14 +39,26 @@ if __name__ == "__main__":
         loss='categorical_crossentropy',
         metrics=['accuracy'],
     )
-    earlyStopping = tf.keras.callbacks.EarlyStopping(monitor='val_accuracy', mode='max', patience=5,  restore_best_weights=True)
 
-    model.fit(train['plot'], train['direction'], epochs=10, validation_data=(validate['plot'], validate['direction']), batch_size=50, callbacks=[earlyStopping])
-    y_hat = model.predict(test['plot'])
-    y_test = test['direction']
-    modelIO.save_model(timeframe, model, np.round(y_hat).astype(np.int32), np.round(y_test).astype(np.int32))
+    checkpoint_file_path = checkpoint_file(timeframe)
+    remove_dir(checkpoint_file_path)
+    earlyStopping = tf.keras.callbacks.EarlyStopping(monitor='val_accuracy', patience = 5, restore_best_weights = False)
+    checkpoint = tf.keras.callbacks.ModelCheckpoint(
+        filepath=checkpoint_file_path,
+        save_weights_only=True,
+        monitor='val_accuracy',
+        mode='max',
+        save_best_only=True, verbose=1
+    )
 
-    
-    #Create confusion matrix
-    # y_hat = model.predict(test['plot'], use_multiprocessing = True)
-    # modelIO.save_model(symbol, timeframe, model, y_hat, test['direction'])
+
+    model.fit(train['plot'], train['direction'], epochs=20, validation_data=(validate['plot'], validate['direction']), batch_size=100, callbacks=[earlyStopping, checkpoint])
+
+    x = test['plot']
+    y_test = np.round(test['direction']).astype(np.int32)
+    loss, accuracy = model.evaluate(x, y_test, verbose = 0)
+    print('Test loss:', loss) 
+    print('Test accuracy:', accuracy)
+
+    modelIO.save_model(timeframe, model, x,  y_test)
+ 
