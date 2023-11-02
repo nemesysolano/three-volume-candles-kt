@@ -15,7 +15,7 @@ object CandleScaler {
         .toTypedArray()
 
     private fun h2l2Scaler(candle: Candle, array: Array<Candle>): ScaledCandle = when(candle.index) {
-        in 0 until LOOKBACK_PERIOD-1  -> ScaledCandle(candle)
+        in 0 until LOOKBACK_PERIOD-1  -> ScaledCandle(candle,0)
         else -> h2l2Scaler(candle.index-LOOKBACK_PERIOD+1, candle.index+1, array[candle.index], array)
     }
 
@@ -28,6 +28,7 @@ object CandleScaler {
         var fit = {x: Double -> (x -ll)/scale}
         return ScaledCandle(
             source,
+            0,
             fit(source.open),
             fit(source.high),
             fit(source.low),

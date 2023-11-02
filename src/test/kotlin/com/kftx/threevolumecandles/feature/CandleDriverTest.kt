@@ -87,7 +87,7 @@ class CandleDriverTest {
     fun symmetricReversionWithScaledCandleTest(array: Array<ScaledCandle>, expected: Int) {
         val thread = Thread.currentThread().name
         val scaledCandle = array.last()
-        val actual = CandleDriver.symmetricReversion(scaledCandle, array)
+        val actual = CandleDriver.symmetricReversion(scaledCandle, array, 0)
         assertEquals(expected, actual.direction)
 
         logger.debug(String.format("thread=%s", thread))
@@ -111,10 +111,10 @@ class CandleDriverTest {
             return Stream.of(
                 Arguments.of(
                     arrayOf(
-                        ScaledCandle(Candle(0, Date(), 1.0, 2.0, 1.0, 1.0, 0.0, 0.0, 0.0)),
-                        ScaledCandle(Candle(1, Date(), 1.0, 1.0, 1.0, 1.0, 0.0, 0.0, 0.0)),
-                        ScaledCandle(Candle(2, Date(), 1.0, 1.0, 1.0, 1.0, 0.0, 0.0, 0.0)),
-                        ScaledCandle(Candle(3, Date(), 1.0, 1.0, 1.0, 1.0, 0.0, 0.0, 0.0)),
+                        ScaledCandle(Candle(0, Date(), 1.0, 2.0, 1.0, 1.0, 0.0, 0.0, 0.0), 0),
+                        ScaledCandle(Candle(1, Date(), 1.0, 1.0, 1.0, 1.0, 0.0, 0.0, 0.0), 0),
+                        ScaledCandle(Candle(2, Date(), 1.0, 1.0, 1.0, 1.0, 0.0, 0.0, 0.0), 0),
+                        ScaledCandle(Candle(3, Date(), 1.0, 1.0, 1.0, 1.0, 0.0, 0.0, 0.0), 0),
                     ),
                     listOf(
                         Triple(0, 1, 0),
@@ -124,10 +124,10 @@ class CandleDriverTest {
                 ),
                 Arguments.of(
                     arrayOf(
-                        ScaledCandle(Candle(0, Date(), 1.0, 1.0, 1.0, 1.0, 0.0, 0.0, 0.0)),
-                        ScaledCandle(Candle(1, Date(), 1.0, 2.0, 1.0, 1.0, 0.0, 0.0, 0.0)),
-                        ScaledCandle(Candle(2, Date(), 1.0, 1.0, 1.0, 1.0, 0.0, 0.0, 0.0)),
-                        ScaledCandle(Candle(3, Date(), 1.0, 1.0, 1.0, 1.0, 0.0, 0.0, 0.0)),
+                        ScaledCandle(Candle(0, Date(), 1.0, 1.0, 1.0, 1.0, 0.0, 0.0, 0.0), 0),
+                        ScaledCandle(Candle(1, Date(), 1.0, 2.0, 1.0, 1.0, 0.0, 0.0, 0.0), 0),
+                        ScaledCandle(Candle(2, Date(), 1.0, 1.0, 1.0, 1.0, 0.0, 0.0, 0.0), 0),
+                        ScaledCandle(Candle(3, Date(), 1.0, 1.0, 1.0, 1.0, 0.0, 0.0, 0.0), 0),
                     ),
                     listOf(
                         Triple(0, 1, 1),
@@ -137,10 +137,10 @@ class CandleDriverTest {
                 ),
                 Arguments.of(
                     arrayOf(
-                        ScaledCandle(Candle(0, Date(), 1.0, 1.0, 1.0, 1.0, 0.0, 0.0, 0.0)),
-                        ScaledCandle(Candle(1, Date(), 1.0, 1.0, 1.0, 1.0, 0.0, 0.0, 0.0)),
-                        ScaledCandle(Candle(2, Date(), 1.0, 2.0, 1.0, 1.0, 0.0, 0.0, 0.0)),
-                        ScaledCandle(Candle(3, Date(), 1.0, 1.0, 1.0, 1.0, 0.0, 0.0, 0.0)),
+                        ScaledCandle(Candle(0, Date(), 1.0, 1.0, 1.0, 1.0, 0.0, 0.0, 0.0), 0),
+                        ScaledCandle(Candle(1, Date(), 1.0, 1.0, 1.0, 1.0, 0.0, 0.0, 0.0), 0),
+                        ScaledCandle(Candle(2, Date(), 1.0, 2.0, 1.0, 1.0, 0.0, 0.0, 0.0), 0),
+                        ScaledCandle(Candle(3, Date(), 1.0, 1.0, 1.0, 1.0, 0.0, 0.0, 0.0), 0),
                     ),
                     listOf(
                         Triple(1, 3, 2),
@@ -156,10 +156,10 @@ class CandleDriverTest {
             return Stream.of(
                 Arguments.of(
                     arrayOf(
-                        ScaledCandle(Candle(0, Date(), 1.0, 1.0, 1.0, 1.0, 0.0, 0.0, 0.0)),
-                        ScaledCandle(Candle(1, Date(), 1.0, 1.0, 2.0, 1.0, 0.0, 0.0, 0.0)),
-                        ScaledCandle(Candle(2, Date(), 1.0, 1.0, 2.0, 1.0, 0.0, 0.0, 0.0)),
-                        ScaledCandle(Candle(3, Date(), 1.0, 1.0, 2.0, 1.0, 0.0, 0.0, 0.0)),
+                        ScaledCandle(Candle(0, Date(), 1.0, 1.0, 1.0, 1.0, 0.0, 0.0, 0.0), 0),
+                        ScaledCandle(Candle(1, Date(), 1.0, 1.0, 2.0, 1.0, 0.0, 0.0, 0.0), 0),
+                        ScaledCandle(Candle(2, Date(), 1.0, 1.0, 2.0, 1.0, 0.0, 0.0, 0.0), 0),
+                        ScaledCandle(Candle(3, Date(), 1.0, 1.0, 2.0, 1.0, 0.0, 0.0, 0.0), 0),
                     ),
                     listOf(
                         Triple(0, 1, 0),
@@ -169,10 +169,10 @@ class CandleDriverTest {
                 ),
                 Arguments.of(
                     arrayOf(
-                        ScaledCandle(Candle(0, Date(), 1.0, 1.0, 2.0, 1.0, 0.0, 0.0, 0.0)),
-                        ScaledCandle(Candle(1, Date(), 1.0, 1.0, 1.0, 1.0, 0.0, 0.0, 0.0)),
-                        ScaledCandle(Candle(2, Date(), 1.0, 1.0, 2.0, 1.0, 0.0, 0.0, 0.0)),
-                        ScaledCandle(Candle(3, Date(), 1.0, 1.0, 2.0, 1.0, 0.0, 0.0, 0.0)),
+                        ScaledCandle(Candle(0, Date(), 1.0, 1.0, 2.0, 1.0, 0.0, 0.0, 0.0), 0),
+                        ScaledCandle(Candle(1, Date(), 1.0, 1.0, 1.0, 1.0, 0.0, 0.0, 0.0), 0),
+                        ScaledCandle(Candle(2, Date(), 1.0, 1.0, 2.0, 1.0, 0.0, 0.0, 0.0), 0),
+                        ScaledCandle(Candle(3, Date(), 1.0, 1.0, 2.0, 1.0, 0.0, 0.0, 0.0), 0),
                     ),
                     listOf(
                         Triple(0, 1, 1),
@@ -182,10 +182,10 @@ class CandleDriverTest {
                 ),
                 Arguments.of(
                     arrayOf(
-                        ScaledCandle(Candle(0, Date(), 1.0, 1.0, 2.0, 1.0, 0.0, 0.0, 0.0)),
-                        ScaledCandle(Candle(1, Date(), 1.0, 1.0, 2.0, 1.0, 0.0, 0.0, 0.0)),
-                        ScaledCandle(Candle(2, Date(), 1.0, 1.0, 1.0, 1.0, 0.0, 0.0, 0.0)),
-                        ScaledCandle(Candle(3, Date(), 1.0, 1.0, 2.0, 1.0, 0.0, 0.0, 0.0)),
+                        ScaledCandle(Candle(0, Date(), 1.0, 1.0, 2.0, 1.0, 0.0, 0.0, 0.0), 0),
+                        ScaledCandle(Candle(1, Date(), 1.0, 1.0, 2.0, 1.0, 0.0, 0.0, 0.0), 0),
+                        ScaledCandle(Candle(2, Date(), 1.0, 1.0, 1.0, 1.0, 0.0, 0.0, 0.0), 0),
+                        ScaledCandle(Candle(3, Date(), 1.0, 1.0, 2.0, 1.0, 0.0, 0.0, 0.0), 0),
                     ),
                     listOf(
                         Triple(1, 3, 2),
@@ -200,11 +200,11 @@ class CandleDriverTest {
             return Stream.of(
                 Arguments.of(
                     arrayOf(
-                        ScaledCandle(Candle(0, Date(), 1.0, 1.0, 1.0, 2.0, 0.0, 0.0, 0.0)),
-                        ScaledCandle(Candle(1, Date(), 1.0, 1.0, 1.0, 1.0, 0.0, 0.0, 0.0)),
-                        ScaledCandle(Candle(2, Date(), 1.0, 1.0, 1.0, 1.0, 0.0, 0.0, 0.0)),
-                        ScaledCandle(Candle(3, Date(), 1.0, 1.0, 1.0, 3.0, 0.0, 0.0, 0.0)),
-                        ScaledCandle(Candle(4, Date(), 1.0, 1.0, 1.0, 1.0, 0.0, 0.0, 0.0)),
+                        ScaledCandle(Candle(0, Date(), 1.0, 1.0, 1.0, 2.0, 0.0, 0.0, 0.0), 0),
+                        ScaledCandle(Candle(1, Date(), 1.0, 1.0, 1.0, 1.0, 0.0, 0.0, 0.0), 0),
+                        ScaledCandle(Candle(2, Date(), 1.0, 1.0, 1.0, 1.0, 0.0, 0.0, 0.0), 0),
+                        ScaledCandle(Candle(3, Date(), 1.0, 1.0, 1.0, 3.0, 0.0, 0.0, 0.0), 0),
+                        ScaledCandle(Candle(4, Date(), 1.0, 1.0, 1.0, 1.0, 0.0, 0.0, 0.0), 0),
                     ),
                     listOf(
                         Triple(0, 1, 0),
@@ -221,11 +221,11 @@ class CandleDriverTest {
             return Stream.of(
                 Arguments.of(
                     arrayOf(
-                        ScaledCandle(Candle(0, Date(), 1.0, 1.0, 1.0, 1.0, 0.0, 0.0, 0.0)),
-                        ScaledCandle(Candle(1, Date(), 1.0, 1.0, 1.0, 2.0, 0.0, 0.0, 0.0)),
-                        ScaledCandle(Candle(2, Date(), 1.0, 1.0, 1.0, 3.0, 0.0, 0.0, 0.0)),
-                        ScaledCandle(Candle(3, Date(), 1.0, 1.0, 1.0, 3.0, 0.0, 0.0, 0.0)),
-                        ScaledCandle(Candle(4, Date(), 1.0, 1.0, 1.0, 1.0, 0.0, 0.0, 0.0)),
+                        ScaledCandle(Candle(0, Date(), 1.0, 1.0, 1.0, 1.0, 0.0, 0.0, 0.0), 0),
+                        ScaledCandle(Candle(1, Date(), 1.0, 1.0, 1.0, 2.0, 0.0, 0.0, 0.0), 0),
+                        ScaledCandle(Candle(2, Date(), 1.0, 1.0, 1.0, 3.0, 0.0, 0.0, 0.0), 0),
+                        ScaledCandle(Candle(3, Date(), 1.0, 1.0, 1.0, 3.0, 0.0, 0.0, 0.0), 0),
+                        ScaledCandle(Candle(4, Date(), 1.0, 1.0, 1.0, 1.0, 0.0, 0.0, 0.0), 0),
                     ),
                     listOf(
                         Triple(0, 1, 0),
@@ -240,31 +240,31 @@ class CandleDriverTest {
         fun symmetricReversionWithScaledCandleTestSource(): Stream<Arguments> = Stream.of(
             Arguments.of(
                 arrayOf(
-                    ScaledCandle(Candle(0, Date(), 5.0, 6.0, 5.0, 1.0, 1.0, 1.0, 1.0)),
-                    ScaledCandle(Candle(1, Date(), 4.0, 5.0, 4.0, 1.0, 1.0, 1.0, 1.0)),
-                    ScaledCandle(Candle(2, Date(), 3.0, 4.0, 3.0, 1.0, 1.0, 1.0, 1.0)),
-                    ScaledCandle(Candle(3, Date(), 2.0, 3.0, 2.0, 1.0, 1.0, 1.0, 1.0)),
-                    ScaledCandle(Candle(4, Date(), 1.0, 2.0, 0.5, 1.0, 1.0, 1.0, 1.0)),//
-                    ScaledCandle(Candle(5, Date(), 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0)),
-                    ScaledCandle(Candle(6, Date(), 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0)),
-                    ScaledCandle(Candle(7, Date(), 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0)),
-                    ScaledCandle(Candle(8, Date(), 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0)),
-                    ScaledCandle(Candle(9, Date(), 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0)),
+                    ScaledCandle(Candle(0, Date(), 5.0, 6.0, 5.0, 1.0, 1.0, 1.0, 1.0),0),
+                    ScaledCandle(Candle(1, Date(), 4.0, 5.0, 4.0, 1.0, 1.0, 1.0, 1.0),0),
+                    ScaledCandle(Candle(2, Date(), 3.0, 4.0, 3.0, 1.0, 1.0, 1.0, 1.0),0),
+                    ScaledCandle(Candle(3, Date(), 2.0, 3.0, 2.0, 1.0, 1.0, 1.0, 1.0),0),
+                    ScaledCandle(Candle(4, Date(), 1.0, 2.0, 0.5, 1.0, 1.0, 1.0, 1.0),0),//
+                    ScaledCandle(Candle(5, Date(), 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0),0),
+                    ScaledCandle(Candle(6, Date(), 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0),0),
+                    ScaledCandle(Candle(7, Date(), 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0),0),
+                    ScaledCandle(Candle(8, Date(), 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0),0),
+                    ScaledCandle(Candle(9, Date(), 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0),0),
                 ),
                 1
             ),
             Arguments.of(
                 arrayOf(
-                    ScaledCandle(Candle(0, Date(), 1.0, 2.0, 0.5, 1.0, 1.0, 1.0, 1.0)),
-                    ScaledCandle(Candle(1, Date(), 2.0, 3.0, 1.0, 1.0, 1.0, 1.0, 1.0)),
-                    ScaledCandle(Candle(2, Date(), 3.0, 4.0, 1.0, 1.0, 1.0, 1.0, 1.0)),
-                    ScaledCandle(Candle(3, Date(), 4.0, 5.0, 1.0, 1.0, 1.0, 1.0, 1.0)),
-                    ScaledCandle(Candle(4, Date(), 5.0, 6.0, 1.0, 1.0, 1.0, 1.0, 1.0)),//
-                    ScaledCandle(Candle(5, Date(), 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0)),
-                    ScaledCandle(Candle(6, Date(), 1.0, 0.5, 1.0, 1.0, 1.0, 1.0, 1.0)),
-                    ScaledCandle(Candle(7, Date(), 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0)),
-                    ScaledCandle(Candle(8, Date(), 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0)),
-                    ScaledCandle(Candle(9, Date(), 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0)),
+                    ScaledCandle(Candle(0, Date(), 1.0, 2.0, 0.5, 1.0, 1.0, 1.0, 1.0),0),
+                    ScaledCandle(Candle(1, Date(), 2.0, 3.0, 1.0, 1.0, 1.0, 1.0, 1.0),0),
+                    ScaledCandle(Candle(2, Date(), 3.0, 4.0, 1.0, 1.0, 1.0, 1.0, 1.0),0),
+                    ScaledCandle(Candle(3, Date(), 4.0, 5.0, 1.0, 1.0, 1.0, 1.0, 1.0),0),
+                    ScaledCandle(Candle(4, Date(), 5.0, 6.0, 1.0, 1.0, 1.0, 1.0, 1.0),0),//
+                    ScaledCandle(Candle(5, Date(), 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0),0),
+                    ScaledCandle(Candle(6, Date(), 1.0, 0.5, 1.0, 1.0, 1.0, 1.0, 1.0),0),
+                    ScaledCandle(Candle(7, Date(), 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0),0),
+                    ScaledCandle(Candle(8, Date(), 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0),0),
+                    ScaledCandle(Candle(9, Date(), 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0),0),
                 ),
                 -1
             )
@@ -274,26 +274,26 @@ class CandleDriverTest {
         fun symmetricReversionTestSource(): Stream<Arguments> = Stream.of(
             Arguments.of(
                 arrayOf( // leftHH < rightLL
-                    ScaledCandle(Candle(0, Date(), 1.0, 1.0, 1.0, 1.0, 0.0, 0.0, 0.0)),
-                    ScaledCandle(Candle(1, Date(), 1.0, 2.0, 2.0, 1.0, 0.0, 0.0, 0.0)),
-                    ScaledCandle(Candle(2, Date(), 1.0, 1.0, 1.0, 1.0, 0.0, 0.0, 0.0)),
-                    ScaledCandle(Candle(3, Date(), 1.0, 2.0, 2.0, 1.0, 0.0, 0.0, 0.0)),
-                    ScaledCandle(Candle(4, Date(), 1.0, 1.0, 1.0, 1.0, 0.0, 0.0, 0.0)),//
-                    ScaledCandle(Candle(5, Date(), 1.0, 3.0, 3.0, 1.0, 0.0, 0.0, 0.0)),
-                    ScaledCandle(Candle(6, Date(), 1.0, 4.0, 4.0, 1.0, 0.0, 0.0, 0.0)),
-                    ScaledCandle(Candle(7, Date(), 1.0, 3.0, 3.0, 1.0, 0.0, 0.0, 0.0)),
-                    ScaledCandle(Candle(8, Date(), 1.0, 4.0, 4.0, 1.0, 0.0, 0.0, 0.0)),
-                    ScaledCandle(Candle(9, Date(), 1.0, 3.0, 3.0, 1.0, 0.0, 0.0, 0.0)),
-                    ScaledCandle(Candle(10, Date(), 1.0, 3.0, 3.0, 1.0, 0.0, 0.0, 0.0)),
-                    ScaledCandle(Candle(11, Date(), 1.0, 4.0, 4.0, 1.0, 0.0, 0.0, 0.0)),
-                    ScaledCandle(Candle(12, Date(), 1.0, 3.0, 3.0, 1.0, 0.0, 0.0, 0.0)),
-                    ScaledCandle(Candle(13, Date(), 1.0, 3.0, 4.0, 1.0, 0.0, 0.0, 0.0)),
-                    ScaledCandle(Candle(14, Date(), 1.0, 3.0, 3.0, 1.0, 0.0, 0.0, 0.0)),//
-                    ScaledCandle(Candle(15, Date(), 1.0, 1.0, 1.0, 1.0, 0.0, 0.0, 0.0)),
-                    ScaledCandle(Candle(16, Date(), 1.0, 2.0, 2.0, 1.0, 0.0, 0.0, 0.0)),
-                    ScaledCandle(Candle(17, Date(), 1.0, 1.0, 2.0, 1.0, 0.0, 0.0, 0.0)),
-                    ScaledCandle(Candle(18, Date(), 1.0, 2.0, 2.0, 1.0, 0.0, 0.0, 0.0)),
-                    ScaledCandle(Candle(19, Date(), 1.0, 1.0, 1.0, 1.0, 0.0, 0.0, 0.0)),
+                    ScaledCandle(Candle(0, Date(), 1.0, 1.0, 1.0, 1.0, 0.0, 0.0, 0.0),0),
+                    ScaledCandle(Candle(1, Date(), 1.0, 2.0, 2.0, 1.0, 0.0, 0.0, 0.0),0),
+                    ScaledCandle(Candle(2, Date(), 1.0, 1.0, 1.0, 1.0, 0.0, 0.0, 0.0),0),
+                    ScaledCandle(Candle(3, Date(), 1.0, 2.0, 2.0, 1.0, 0.0, 0.0, 0.0),0),
+                    ScaledCandle(Candle(4, Date(), 1.0, 1.0, 1.0, 1.0, 0.0, 0.0, 0.0),0),//
+                    ScaledCandle(Candle(5, Date(), 1.0, 3.0, 3.0, 1.0, 0.0, 0.0, 0.0),0),
+                    ScaledCandle(Candle(6, Date(), 1.0, 4.0, 4.0, 1.0, 0.0, 0.0, 0.0),0),
+                    ScaledCandle(Candle(7, Date(), 1.0, 3.0, 3.0, 1.0, 0.0, 0.0, 0.0),0),
+                    ScaledCandle(Candle(8, Date(), 1.0, 4.0, 4.0, 1.0, 0.0, 0.0, 0.0),0),
+                    ScaledCandle(Candle(9, Date(), 1.0, 3.0, 3.0, 1.0, 0.0, 0.0, 0.0),0),
+                    ScaledCandle(Candle(10, Date(), 1.0, 3.0, 3.0, 1.0, 0.0, 0.0, 0.0),0),
+                    ScaledCandle(Candle(11, Date(), 1.0, 4.0, 4.0, 1.0, 0.0, 0.0, 0.0),0),
+                    ScaledCandle(Candle(12, Date(), 1.0, 3.0, 3.0, 1.0, 0.0, 0.0, 0.0),0),
+                    ScaledCandle(Candle(13, Date(), 1.0, 3.0, 4.0, 1.0, 0.0, 0.0, 0.0),0),
+                    ScaledCandle(Candle(14, Date(), 1.0, 3.0, 3.0, 1.0, 0.0, 0.0, 0.0),0),//
+                    ScaledCandle(Candle(15, Date(), 1.0, 1.0, 1.0, 1.0, 0.0, 0.0, 0.0),0),
+                    ScaledCandle(Candle(16, Date(), 1.0, 2.0, 2.0, 1.0, 0.0, 0.0, 0.0),0),
+                    ScaledCandle(Candle(17, Date(), 1.0, 1.0, 2.0, 1.0, 0.0, 0.0, 0.0),0),
+                    ScaledCandle(Candle(18, Date(), 1.0, 2.0, 2.0, 1.0, 0.0, 0.0, 0.0),0),
+                    ScaledCandle(Candle(19, Date(), 1.0, 1.0, 1.0, 1.0, 0.0, 0.0, 0.0),0),
                 )
             )
         )

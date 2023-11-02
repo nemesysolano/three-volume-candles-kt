@@ -4,10 +4,10 @@ import com.kftx.threevolumecandles.LOOKBACK_PERIOD
 import com.kftx.threevolumecandles.feature.ColorPicker
 import com.kftx.threevolumecandles.feature.PNGGenerationContext
 import com.kftx.threevolumecandles.feature.PNGGenerationContextList
+import com.kftx.threevolumecandles.model.Direction
 import com.kftx.threevolumecandles.model.ScaledCandle
 import java.awt.Color
 import java.awt.Graphics2D
-import java.awt.image.BufferedImage
 import java.io.File
 import javax.imageio.ImageIO
 import kotlin.math.abs
@@ -20,25 +20,32 @@ object PNG {
         val slice = array.slice(IntRange(startInclusive, endInclusive))
         val filePrefix = directory.absolutePath + File.separator
         try {
-            writePlot(pngGenerationContext, filePrefix, slice)
+            writePlot(pngGenerationContext, filePrefix, array, slice)
         }finally {
             bufferedImageList.push(pngGenerationContext)
         }
     }
 
-    fun writePlot(pngGenerationContext: PNGGenerationContext, filePrefix: String, slice: List<ScaledCandle>) {
+    fun writePlot(pngGenerationContext: PNGGenerationContext, filePrefix: String, array: Array<ScaledCandle>, slice: List<ScaledCandle>) {
         val localDateTime = slice[0].source.localDateTime
-        val witdh = 100 // pixels
+        val width = 100 // pixels
         val height = 100 // pixels
         val graphics = pngGenerationContext.bufferedImage.graphics as Graphics2D
         val candleWidth = 15
         val horizGap = 3 //pixels
         var horizOffset = 3
+        val backgroundColorsPair = ColorPicker.forBackground(if(slice[0].index == 0) array[slice[0].index].direction else array[slice[0].index-1].direction)
+        val vertical0 = (height / 2) - 1
+        val vertical1 = vertical0 + 2
 
+//        graphics.color = Color.WHITE
+//        graphics.fillRect(0, 0, width, height)
+        graphics.color = backgroundColorsPair.first
+        graphics.fillRect(0, 0, width, vertical0+1)
+        graphics.color = backgroundColorsPair.second
+        graphics.fillRect(0, vertical1-1, width, vertical0 + 2)
         slice.forEach { candle ->
-            val color = ColorPicker.forNormalCandle(candle)
-            graphics.color = color
-
+            graphics.color = ColorPicker.forNormalCandle(candle)
 
             graphics.drawLine(
                 horizOffset + 6,
@@ -62,7 +69,5 @@ object PNG {
             "png",
             File("${filePrefix}${pngGenerationContext.dateFormatter.format(localDateTime)}.png")
         )
-        graphics.color = Color.WHITE
-        graphics.fillRect(0, 0, witdh, height)
     }
 }

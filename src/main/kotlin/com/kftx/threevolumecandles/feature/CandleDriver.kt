@@ -13,11 +13,11 @@ object CandleDriver {
         val replica = array.copyOf()
         val endInclusive = array.size
         IntStream.range(startInclusive, endInclusive)
-            .parallel().forEach { index -> symmetricReversion(replica[index], replica) }
+            .parallel().forEach { index -> symmetricReversion(replica[index], replica, index-startInclusive) }
         return replica
     }
 
-    fun symmetricReversion(scaledCandle: ScaledCandle, array: Array<ScaledCandle>): ScaledCandle {
+    fun symmetricReversion(scaledCandle: ScaledCandle, array: Array<ScaledCandle>, index: Int): ScaledCandle {
         val startInclusive = scaledCandle.source.index - 2 * LOOKBACK_PERIOD + 1
         val middlePoint = startInclusive + LOOKBACK_PERIOD - 1
         val rightEndInclusive = middlePoint + LOOKBACK_PERIOD
@@ -49,12 +49,12 @@ object CandleDriver {
              array[middlePoint].open > array[middlePoint].close
              array[middlePoint].close > 0.2 */
         if(up && !down) {
-            array[middlePoint] = array[middlePoint].copy(direction = Direction.UP)
+            array[middlePoint] = array[middlePoint].copy(direction = Direction.UP, index = index)
         } else if(!up && down) {
-            array[middlePoint] = array[middlePoint].copy(direction = Direction.DOWN)
+            array[middlePoint] = array[middlePoint].copy(direction = Direction.DOWN, index = index)
         }
 
-        return array[middlePoint]
+        return array[middlePoint].copy(index = index)
     }
 
     fun highestHighIndex(array: Array<ScaledCandle>, startInclusive: Int, endInclusive: Int) =
