@@ -9,15 +9,16 @@ import com.kftx.threevolumecandles.model.ScaledCandle
 import java.awt.Color
 import java.awt.Graphics2D
 import java.io.File
+import java.lang.RuntimeException
+import java.util.stream.IntStream
 import javax.imageio.ImageIO
 import kotlin.math.abs
 
 object PNG {
     fun writePlot(input: File, bufferedImageList: PNGGenerationContextList, directory: File, array: Array<ScaledCandle>, index: Int) {
         val startInclusive = index - LOOKBACK_PERIOD + 1
-        val endInclusive = index
         val pngGenerationContext = bufferedImageList.take()
-        val slice = array.slice(IntRange(startInclusive, endInclusive))
+        val slice = array.slice(IntRange(startInclusive, index))
         val filePrefix = directory.absolutePath + File.separator
         try {
             writePlot(pngGenerationContext, filePrefix, array, slice)
@@ -31,19 +32,30 @@ object PNG {
         val width = 100 // pixels
         val height = 100 // pixels
         val graphics = pngGenerationContext.bufferedImage.graphics as Graphics2D
+
+        writeStoryLines(graphics, width, array, slice);
+        writeStochasticCandles(graphics, height, slice)
+
+        ImageIO.write(
+            pngGenerationContext.bufferedImage,
+            "png",
+            File("${filePrefix}${pngGenerationContext.dateFormatter.format(localDateTime)}.png")
+        )
+
+        graphics.color = Color.WHITE
+        graphics.fillRect(0, 0, width, height)
+
+    }
+
+    private fun writeStochasticCandles(
+        graphics: Graphics2D,
+        height: Int,
+        slice: List<ScaledCandle>
+    ) {
         val candleWidth = 15
         val horizGap = 3 //pixels
         var horizOffset = 3
-        val backgroundColorsPair = ColorPicker.forBackground(if(slice[0].index == 0) array[slice[0].index].direction else array[slice[0].index-1].direction)
-        val vertical0 = (height / 2) - 1
-        val vertical1 = vertical0 + 2
 
-//        graphics.color = Color.WHITE
-//        graphics.fillRect(0, 0, width, height)
-        graphics.color = backgroundColorsPair.first
-        graphics.fillRect(0, 0, width, vertical0+1)
-        graphics.color = backgroundColorsPair.second
-        graphics.fillRect(0, vertical1-1, width, vertical0 + 2)
         slice.forEach { candle ->
             graphics.color = ColorPicker.forNormalCandle(candle)
 
@@ -53,7 +65,7 @@ object PNG {
                 horizOffset + 6,
                 ((height - candle.low)*100).toInt(),
             )
-   
+
             graphics.fillRect(
                 horizOffset,
                 height - (candle.open.coerceAtMost(candle.close) * height).toInt(),
@@ -64,10 +76,28 @@ object PNG {
             horizOffset += candleWidth + horizGap
         }
 
-        ImageIO.write(
-            pngGenerationContext.bufferedImage,
-            "png",
-            File("${filePrefix}${pngGenerationContext.dateFormatter.format(localDateTime)}.png")
-        )
+    }
+
+    private fun writeStoryLines(graphics: Graphics2D, width: Int, array: Array<ScaledCandle>, slice: List<ScaledCandle>) {
+        val startInclusive = Math.max(0, slice[0].index - LOOKBACK_PERIOD)
+        val endExclusive = slice[0].index
+        val vertGap = 10
+        var vertOffset = 5
+
+        IntStream.range(startInclusive, endExclusive).forEach{ index ->
+            val lineColor = ColorPicker.forNormalCandle(array[index])
+            slice.all { bar -> bar.source.localDateTime.compareTo(array[index].source.localDateTime) != 0 } ?: throw RuntimeException()
+
+            graphics.color = lineColor
+            graphics.drawLine(
+                0,
+                vertOffset,
+                width,
+                vertOffset,
+            )
+
+            vertOffset += vertGap
+        }
+
     }
 }

@@ -53,7 +53,7 @@ if __name__ == "__main__":
     )
 
   
-    model.fit(train['plot'], train['direction'], epochs=20, validation_data=(validate['plot'], validate['direction']), batch_size=100, callbacks=[earlyStopping, checkpoint])
+    model.fit(train['plot'], train['direction'], epochs=5, validation_data=(validate['plot'], validate['direction']), batch_size=100, callbacks=[earlyStopping, checkpoint])
 
     x = test['plot']
     y_test = np.round(test['direction']).astype(np.int32)
