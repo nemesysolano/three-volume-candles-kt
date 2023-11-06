@@ -79,9 +79,13 @@ object PNG {
     }
 
     private fun writeStoryLines(graphics: Graphics2D, width: Int, array: Array<ScaledCandle>, slice: List<ScaledCandle>) {
+        if(slice[0].direction == Direction.IDLE) {
+            return
+        }
+
         val startInclusive = Math.max(0, slice[0].index - LOOKBACK_PERIOD)
         val endExclusive = slice[0].index
-        val vertGap = 10
+        val vertGap = 5
         var vertOffset = 5
 
         IntStream.range(startInclusive, endExclusive).forEach{ index ->

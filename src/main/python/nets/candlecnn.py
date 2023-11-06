@@ -45,7 +45,6 @@ if __name__ == "__main__":
         mode='max',
         save_best_only=True, verbose=1
     )
-
   
     model.fit(train['plot'], train['direction'], epochs=5, validation_data=(validate['plot'], validate['direction']), batch_size=100, callbacks=[earlyStopping, checkpoint])
 

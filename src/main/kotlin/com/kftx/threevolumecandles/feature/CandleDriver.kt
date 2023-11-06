@@ -17,7 +17,7 @@ object CandleDriver {
         return replica
     }
 
-    fun symmetricReversion(scaledCandle: ScaledCandle, array: Array<ScaledCandle>, index: Int): ScaledCandle {
+    fun symmetricReversion(scaledCandle: ScaledCandle, array: Array<ScaledCandle>, index: Int) {
         val startInclusive = scaledCandle.source.index - 2 * LOOKBACK_PERIOD + 1
         val middlePoint = startInclusive + LOOKBACK_PERIOD - 1
         val rightEndInclusive = middlePoint + LOOKBACK_PERIOD
@@ -29,32 +29,21 @@ object CandleDriver {
         val rightHH = highestHighIndex(array, rightStartInclusive, rightEndInclusive).first
 
         val up = leftHH > array[middlePoint].source.high &&
-                array[middlePoint].source.low < rightLL &&
-                array[middlePoint].open < array[middlePoint].close &&
-                array[middlePoint].close < 0.5
-        val down = leftLL < array[middlePoint].source.low &&
-                (
-                    array[middlePoint].source.close > rightHH ||
-                    array[middlePoint].source.close > array[rightEndInclusive].source.close ||
-                    IntStream.rangeClosed(middlePoint+1, rightEndInclusive)
-                        .mapToObj { index-> array[index] }
-                        .filter { item ->
-                            array[middlePoint].source.close > item.source.close &&
-                            array[middlePoint].source.close >  item.source.open &&
-                            item.source.open > item.source.close
-                        }
-                        .count() > 0
-                )
-        /*
-             array[middlePoint].open > array[middlePoint].close
-             array[middlePoint].close > 0.2 */
+            array[middlePoint].source.low < rightLL &&
+            array[middlePoint].source.close < array[rightEndInclusive].source.close
+
+        val down = leftLL < array[middlePoint].source.low && (
+            array[middlePoint].source.close > rightHH ||
+            array[middlePoint].source.close > array[rightEndInclusive].source.close
+        )
+
         if(up && !down) {
-            array[middlePoint] = array[middlePoint].copy(direction = Direction.UP, index = index)
+            array[middlePoint].direction = Direction.UP
         } else if(!up && down) {
-            array[middlePoint] = array[middlePoint].copy(direction = Direction.DOWN, index = index)
+            array[middlePoint].direction = Direction.DOWN
         }
 
-        return array[middlePoint].copy(index = index)
+        array[middlePoint].index = index
     }
 
     fun highestHighIndex(array: Array<ScaledCandle>, startInclusive: Int, endInclusive: Int) =

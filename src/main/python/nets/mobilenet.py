@@ -30,6 +30,10 @@ if __name__ == "__main__":
     model = tf.keras.models.Sequential([
         base_model,
         tf.keras.layers.GlobalAveragePooling2D(),
+        tf.keras.layers.Dense(256, activation='relu'),
+        tf.keras.layers.Dropout(0.05),
+        tf.keras.layers.Dense(128, activation='relu'),
+        tf.keras.layers.Dropout(0.08),
         tf.keras.layers.Dense(datasets.NUM_CLASSES, activation='softmax')
     ])
 
