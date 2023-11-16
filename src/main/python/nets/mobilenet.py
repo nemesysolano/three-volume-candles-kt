@@ -30,10 +30,19 @@ if __name__ == "__main__":
     model = tf.keras.models.Sequential([
         base_model,
         tf.keras.layers.GlobalAveragePooling2D(),
-        tf.keras.layers.Dense(256, activation='relu'),
-        tf.keras.layers.Dropout(0.05),
-        tf.keras.layers.Dense(128, activation='relu'),
-        tf.keras.layers.Dropout(0.08),
+        tf.keras.layers.Dropout(rate = 0.05),
+        tf.keras.layers.Dense(
+            256, 
+            activation='relu'            
+        ),
+        tf.keras.layers.Dropout(rate = 0.05),
+        tf.keras.layers.Dense(
+            128,
+            activation='relu',
+            kernel_regularizer=tf.keras.regularizers.L1L2(l1=1e-5, l2=1e-4),
+            bias_regularizer=tf.keras.regularizers.L2(1e-4),
+            activity_regularizer=tf.keras.regularizers.L2(1e-5)            
+        ),
         tf.keras.layers.Dense(datasets.NUM_CLASSES, activation='softmax')
     ])
 
@@ -57,7 +66,7 @@ if __name__ == "__main__":
     )
 
   
-    model.fit(train['plot'], train['direction'], epochs=5, validation_data=(validate['plot'], validate['direction']), batch_size=100, callbacks=[earlyStopping, checkpoint])
+    model.fit(train['plot'], train['direction'], epochs=1, validation_data=(validate['plot'], validate['direction']), batch_size=50, callbacks=[earlyStopping, checkpoint])
 
     x = test['plot']
     y_test = np.round(test['direction']).astype(np.int32)

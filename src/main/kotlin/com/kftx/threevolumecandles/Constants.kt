@@ -1,3 +1,3 @@
 package com.kftx.threevolumecandles
 
-const val LOOKBACK_PERIOD = 5
+const val LOOKBACK_PERIOD = 18

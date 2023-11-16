@@ -33,7 +33,7 @@ object Process {
             symbolDirectory.mkdirs()
         }
 
-        IntStream.range(startInclusive, array.size).parallel().forEach { index -> PNG.writePlot(input, pngGenerationContextList, symbolDirectory, array, index) }
+        IntStream.range(startInclusive, array.size).parallel().forEach { index -> PNG.writePlot(pngGenerationContextList, symbolDirectory, array, index) }
     }
 
 

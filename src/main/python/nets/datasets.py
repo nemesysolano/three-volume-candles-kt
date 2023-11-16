@@ -6,7 +6,7 @@ import tensorflow as tf
 import numpy as np
 from multiprocessing import cpu_count, Pool
 
-LOOKBACK_PERIOD = 5
+LOOKBACK_PERIOD = 18
 NUM_CLASSES = 3
 symbols = ("AUDUSD", "EURUSD", "GBPUSD", "USDCAD", "USDJPY")
 columns = ('direction', 'plot')
@@ -29,6 +29,7 @@ def load_reversions_with_images(symbol, timeframe, train_validate_percent=0.90, 
     symbol_data_file = os.path.join(DATA_DIR, symbol_file_name)
     dataset = pd.read_csv(symbol_data_file, parse_dates=['datetime'])
     dataset = dataset.head(len(dataset) - (LOOKBACK_PERIOD - 1))
+    dataset.drop(index=dataset.index[:(LOOKBACK_PERIOD-1)], axis=0, inplace=True)
     inference_data = dataset.parallel_apply(lambda row: add_plot(row, symbol_plots_dir, preprocessor), axis=1)
     values = inference_data.values
     train_validate_end = int(train_validate_percent * len(inference_data))

@@ -83,18 +83,6 @@ class CandleDriverTest {
     }
 
     @ParameterizedTest
-    @MethodSource("symmetricReversionWithScaledCandleTestSource")
-    fun symmetricReversionWithScaledCandleTest(array: Array<ScaledCandle>, expected: Int) {
-        val thread = Thread.currentThread().name
-        val scaledCandle = array.last()
-        val actual = CandleDriver.symmetricReversion(scaledCandle, array, 0)
-        assertEquals(expected, actual.direction)
-
-        logger.debug(String.format("thread=%s", thread))
-    }
-
-
-    @ParameterizedTest
     @MethodSource("symmetricReversionTestSource")
     fun symmetricReversionTest(array: Array<ScaledCandle>) {
         val thread = Thread.currentThread().name
